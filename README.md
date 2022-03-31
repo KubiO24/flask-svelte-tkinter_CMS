@@ -2,6 +2,10 @@ Trello: https://trello.com/b/4Qum36NH/cms
 
 </br>
 
+Pobrać potrzebne moduły: </br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - spullować zmiany z gita (master branch) </br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - "npm install" będąc w katalogu Svelte (client) </br>
+
 By połączyć z gitem: </br>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - git remote add origin https://github.com/KubiO24/flask-svelte-tkinter_CMS.git </br>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - praca na branchach: https://www.educative.io/edpresso/git-branch-command </br>
