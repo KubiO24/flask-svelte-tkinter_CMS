@@ -1,6 +1,6 @@
 Trello: https://trello.com/b/4Qum36NH/cms
 
-By połączyć z gitem: 
+By połączyć z gitem: </br>
     - git remote add origin https://github.com/KubiO24/flask-svelte-tkinter_CMS.git
     - praca na branchach: https://www.educative.io/edpresso/git-branch-command
     - git branch -M master (default)
