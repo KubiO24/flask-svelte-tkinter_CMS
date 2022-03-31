@@ -8,14 +8,14 @@ By połączyć z gitem: </br>
     - git branch -M master (default) </br>
     - git push -u origin master (default)
     
-</br></br>
+</br>
 
 By zapisac zmiany zrobione na frontendzie (Svelte):</br>
     - cd client</br>
     - zrobić zmiany w plikach</br>
     - npm run build
 
-</br></br>
+</br>
 
 By odpalic serwer (Flask): </br>
     - python serve
