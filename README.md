@@ -1,6 +1,6 @@
 Trello: https://trello.com/b/4Qum36NH/cms
 
-</br></br>
+</br>
 
 By połączyć z gitem: </br>
     - git remote add origin https://github.com/KubiO24/flask-svelte-tkinter_CMS.git </br>
