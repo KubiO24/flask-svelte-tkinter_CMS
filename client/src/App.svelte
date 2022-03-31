@@ -2,7 +2,7 @@
   import Router, { link } from 'svelte-spa-router'
 
   import Main from './routes/Main.svelte'
-  import Random from './routes/Random.svelte'
+  import Login from './routes/Login.svelte'
 </script>
 
 
@@ -10,7 +10,8 @@
   <Router
     routes = {{
       "/": Main,
-      "/random": Random
+      "/login": Login,
+      "/register": Login
     }}
   />
 </main>
