@@ -1,12 +1,16 @@
-
 <script>
-  let rand = -1;
-  function getRand() {
-    fetch("./rand")
-      .then(d => d.text())
-      .then(d => (rand = d));
-  }
+  import Router, { link } from 'svelte-spa-router'
+
+  import Main from './routes/Main.svelte'
+  import Random from './routes/Random.svelte'
 </script>
 
-<h1>My number is {rand}!</h1>
-<button on:click={getRand}>Get a random number</button>
+
+<main>
+  <Router
+    routes = {{
+      "/": Main,
+      "/random": Random
+    }}
+  />
+</main>
