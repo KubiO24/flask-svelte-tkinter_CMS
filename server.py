@@ -3,16 +3,17 @@ import random
 import sqlite3
 
 app = Flask(__name__)
-myConnection = sqlite3.connect('userData.sqlite')
+myConnection = sqlite3.connect('data.sqlite')
 
 myCursor = myConnection.cursor()
 
 myCursor.execute("""CREATE TABLE IF NOT EXISTS userList (
-    username VARCHAR(255),
-    email VARCHAR(255),
-    password VARCHAR(255),
-    userType INT,
-    clientID INT AUTO_INCREMENT PRIMARY KEY)""")
+    clientID INT AUTO_INCREMENT PRIMARY KEY,
+    username TEXT,
+    email TEXT,
+    password TEXT,
+    userType INT
+)""")
 myConnection.commit()
 myConnection.close()
 
