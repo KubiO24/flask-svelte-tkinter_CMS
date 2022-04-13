@@ -6,6 +6,17 @@
   function validateForm() {
     console.log("submit");
   }
+
+  function changeLogin() {
+    let changelogin = document.getElementById("changeLogin")
+    
+    if(changelogin.style.transform == "none") {
+      changelogin.style.transform = "translateY(300px)";
+    }else {
+      changelogin.style.transform = "none";
+    }
+    
+  }
 </script>
 
 <form id="loginForm" method="post" on:submit|preventDefault={validateForm}>
@@ -20,65 +31,68 @@
       <input type="password" placeholder="Enter Password" name="psw" required />
     </div>
 
-    <button class="btn-grad" type="submit">Login</button>
+    <button type="submit">Login</button>
+  </div>
+  <div on:click={changeLogin} id="changeLogin">
+    <span>Register</span>
   </div>
 </form>
 
+
 <style>
+
   :global(#loginForm) {
-    width: 25%;
+    position: relative;
+    width: 15%;
     height: 400px;
 
     margin: auto;
     margin-top: 100px;
 
-    padding: 40px;
-
-    background-color: white;
+    background-color: black;
     border: 2px solid black;
     border-radius: 20px;
 
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
+    overflow: hidden;
   }
 
   :global(#loginContainer) {
     width: 100%;
     height: 100%;
 
-    background-color: white;
+    padding: 20px;
 
+    background-color: white;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
     align-items: center;
   }
 
-  .btn-grad {
-    margin: 10px;
-    padding: 15px 45px;
-    text-align: center;
-    text-transform: uppercase;
-    transition: 0.5s;
-    background-size: 200% auto;
+  :global(#changeLogin) {
+    position: absolute;
+    width: 40vw;
+    height: 350px;
+    bottom: 0;
+
+    background-color: black;
+    border-radius: 80% 80% 0 0;
     color: white;
-    box-shadow: 0 0 20px #eee;
-    border-radius: 10px;
-    display: block;
     cursor: pointer;
 
-    background-image: linear-gradient(
-      to right,
-      #314755 0%,
-      #26a0da 51%,
-      #314755 100%
-    );
+    display: flex;
+    justify-content: center;
+
+    transform: translateY(300px);
+    transition: .8s ease-in-out;
   }
 
-  .btn-grad:hover {
-    background-position: right center;
-    color: #fff;
-    text-decoration: none;
+  :global(#changeLogin span) {
+    margin-top: 10px;
   }
+
 </style>

@@ -15,3 +15,11 @@
     }}
   />
 </main>
+
+<style>
+  :global(body) {
+    margin: 0px;
+    padding: 0;
+    box-sizing: border-box;
+  }
+</style>
