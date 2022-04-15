@@ -3,7 +3,9 @@
 <a href="/#/Register">Register</a>
 
 <style>
-  h1 {
-    color: purple;
-  }
+    :global(body) {
+        position: fixed;
+        margin: 0;
+        padding: 0;
+    }
 </style>
