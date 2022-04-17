@@ -21,7 +21,7 @@ function changeLogin() {
 
 <div id="loginBox">
     <form id="loginForm" method="post" on:submit|preventDefault={validateForm}>
-        <h2>Login</h2>
+        <h2>Log In</h2>
 
         <div>
             <label for="uname"><b>Username</b></label>
@@ -33,11 +33,11 @@ function changeLogin() {
             <input type="password" placeholder="Enter Password" name="psw" required />
         </div>
 
-        <button id="loginButton" type="submit">Login</button>
+        <button id="loginButton" type="submit">Log In</button>
     </form>
 
     <form on:click={changeLogin} id="registerForm">
-        <h2>Register</h2>
+        <h2>Sign Up</h2>
 
         <div>
             <label for="uname"><b>Username</b></label>
@@ -49,7 +49,7 @@ function changeLogin() {
             <input type="password" placeholder="Enter Password" name="psw" required />
         </div>
 
-        <button type="submit">Register</button>
+        <button type="submit">Sign Up</button>
     </form>
 </div>
 
@@ -103,6 +103,7 @@ function changeLogin() {
     background-color: #FF4B2B;
     border: 1px solid #FF4B2B;
     border-radius: 20px;
+    cursor: pointer;
   
     transition: transform 80ms ease-in;
 }
