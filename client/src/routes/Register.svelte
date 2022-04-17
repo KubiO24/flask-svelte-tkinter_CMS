@@ -15,8 +15,10 @@
 </script>
 
 <div id="loginBox">
-    <form on:click={changeLogin} id="loginForm">
-        <h2>Login</h2>
+
+    <form on:click={changeLogin} id="loginForm" >
+        <h2>Log In</h2>
+
 
         <div>
             <label for="uname"><b>Username</b></label>
@@ -38,15 +40,13 @@
             />
         </div>
 
-        <button id="loginButton" type="submit">Login</button>
+    
+        <button id="loginButton" type="submit">Log In</button>
     </form>
+    
+    <form id="registerForm" on:submit|preventDefault={validateForm} method="post" >
+        <h2>Sign Up</h2>
 
-    <form
-        id="registerForm"
-        on:submit|preventDefault={validateForm}
-        method="post"
-    >
-        <h2>Register</h2>
 
         <div>
             <label for="uname"><b>Username</b></label>
@@ -68,9 +68,12 @@
             />
         </div>
 
-        <button id="registerButton" type="submit">Register</button>
-    </form>
+    
+        <button type="submit">Sign Up</button>
+    </form>   
 </div>
+
+
 
 <style>
     #loginForm {
