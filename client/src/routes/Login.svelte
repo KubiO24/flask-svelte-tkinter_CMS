@@ -1,22 +1,21 @@
 <script>
-// let rand = -1;
-// fetch("./rand")
-//     .then((d) => d.text())
-//     .then((d) => (rand = d));
-function validateForm() {
-    console.log("submit");
-}
+    // let rand = -1;
+    // fetch("./rand")
+    //     .then((d) => d.text())
+    //     .then((d) => (rand = d));
+    function validateForm() {
+        console.log("submit");
+    }
 
-function changeLogin() {
-    let registerForm = document.getElementById("registerForm")
+    function changeLogin() {
+        let registerForm = document.getElementById("registerForm");
 
-    registerForm.style.transform = "none";
+        registerForm.style.transform = "none";
 
-    registerForm.ontransitionend = () => {
-        document.location.href = "/#/Register";
-    };
-
-}
+        registerForm.ontransitionend = () => {
+            document.location.href = "/#/Register";
+        };
+    }
 </script>
 
 <div id="loginBox">
@@ -25,12 +24,22 @@ function changeLogin() {
 
         <div>
             <label for="uname"><b>Username</b></label>
-            <input type="text" placeholder="Enter Username" name="uname" required />
+            <input
+                type="text"
+                placeholder="Enter Username"
+                name="uname"
+                required
+            />
         </div>
 
         <div>
             <label for="psw"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" name="psw" required />
+            <input
+                type="password"
+                placeholder="Enter Password"
+                name="psw"
+                required
+            />
         </div>
 
         <button id="loginButton" type="submit">Login</button>
@@ -41,102 +50,121 @@ function changeLogin() {
 
         <div>
             <label for="uname"><b>Username</b></label>
-            <input type="text" placeholder="Enter Username" name="uname" required />
+            <input
+                type="text"
+                placeholder="Enter Username"
+                name="uname"
+                required
+            />
         </div>
 
         <div>
             <label for="psw"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" name="psw" required />
+            <input
+                type="password"
+                placeholder="Enter Password"
+                name="psw"
+                required
+            />
         </div>
 
-        <button type="submit">Register</button>
+        <button id="registerButton" type="submit">Register</button>
     </form>
 </div>
 
 <style>
-:global(#loginBox) {
-    position: relative;
-    width: 300px;
-    height: 400px;
+    :global(#loginBox) {
+        position: relative;
+        width: 300px;
+        height: 400px;
 
-    margin: auto;
-    margin-top: 100px;
+        margin: auto;
+        margin-top: 100px;
 
-    background-color: black;
-    border: 2px solid black;
-    border-radius: 20px;
-    box-shadow: 0 0 20px 4px rgba(0, 0, 0, 0.25);
+        background-color: black;
+        border: 2px solid black;
+        border-radius: 20px;
+        box-shadow: 0 0 20px 4px rgba(0, 0, 0, 0.25);
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    overflow: hidden;
-}
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        overflow: hidden;
+    }
 
-:global(#loginForm) {
-    width: 100%;
-    height: 100%;
+    :global(#loginForm) {
+        width: 100%;
+        height: 100%;
 
-    padding: 20px;
+        padding: 20px;
 
-    background-color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    align-items: center;
-}
+        background-color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        align-items: center;
+    }
 
-:global(#loginForm h2) {
-    margin-top: -30px;
-}
+    :global(#loginForm h2) {
+        margin-top: -30px;
+    }
 
-:global(button:focus) {
-    outline: none;
-}
+    :global(button:focus) {
+        outline: none;
+    }
 
-:global(#loginButton) {
-    padding: 10px 40px;
-    margin-bottom: 50px;
+    :global(#loginButton) {
+        padding: 10px 40px;
+        margin-bottom: 50px;
 
-    color: white;
-    background-color: #FF4B2B;
-    border: 1px solid #FF4B2B;
-    border-radius: 20px;
-  
-    transition: transform 80ms ease-in;
-}
+        color: white;
+        background-color: #ff4b2b;
+        border: 1px solid #ff4b2b;
+        border-radius: 20px;
 
-:global(#loginButton:active) {
-    transform: scale(0.95);
-}
+        transition: transform 80ms ease-in;
+    }
 
-:global(#registerForm) {
-    position: absolute;
-    width: 700px;
-    height: 350px;
-    bottom: 0;
+    :global(#loginButton:active) {
+        transform: scale(0.95);
+    }
 
-    background: linear-gradient(to right, #FF4B2B, #FF416C);
-    border-radius: 80% 80% 0 0;
-    color: white;
+    :global(#registerForm) {
+        position: absolute;
+        width: 700px;
+        height: 350px;
+        bottom: 0;
 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-evenly;
+        background: linear-gradient(to right, #ff4b2b, #ff416c);
+        border-radius: 80% 80% 0 0;
+        color: white;
 
-    transition: .8s ease-in-out;
-}
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-evenly;
 
-:global(#registerForm h2) {
-    margin-top: -10px;
-}
+        transition: 0.8s ease-in-out;
+    }
 
-#registerForm {
-    cursor: pointer;
-    transform: translateY(280px);
-}
+    :global(#registerForm h2) {
+        margin-top: -10px;
+    }
 
+    #registerForm {
+        cursor: pointer;
+        transform: translateY(280px);
+    }
+    :global(#registerButton) {
+        padding: 10px 40px;
+        margin-bottom: 50px;
 
+        color: #ff4b2b;
+        background-color: white;
+        border: 1px solid white;
+        border-radius: 20px;
+
+        transition: transform 80ms ease-in;
+    }
 </style>
