@@ -1,22 +1,21 @@
 <script>
-// let rand = -1;
-// fetch("./rand")
-//     .then((d) => d.text())
-//     .then((d) => (rand = d));
-function validateForm() {
-    console.log("submit");
-}
+    // let rand = -1;
+    // fetch("./rand")
+    //     .then((d) => d.text())
+    //     .then((d) => (rand = d));
+    function validateForm() {
+        console.log("submit");
+    }
 
-function changeLogin() {
-    let registerForm = document.getElementById("registerForm")
+    function changeLogin() {
+        let registerForm = document.getElementById("registerForm");
 
-    registerForm.style.transform = "none";
+        registerForm.style.transform = "none";
 
-    registerForm.ontransitionend = () => {
-        document.location.href = "/#/Register";
-    };
-
-}
+        registerForm.ontransitionend = () => {
+            document.location.href = "/#/Register";
+        };
+    }
 </script>
 
 <div id="loginBox">
@@ -25,12 +24,22 @@ function changeLogin() {
 
         <div>
             <label for="uname"><b>Username</b></label>
-            <input type="text" placeholder="Enter Username" name="uname" required />
+            <input
+                type="text"
+                placeholder="Enter Username"
+                name="uname"
+                required
+            />
         </div>
 
         <div>
             <label for="psw"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" name="psw" required />
+            <input
+                type="password"
+                placeholder="Enter Password"
+                name="psw"
+                required
+            />
         </div>
 
         <button id="loginButton" type="submit">Log In</button>
@@ -41,19 +50,32 @@ function changeLogin() {
 
         <div>
             <label for="uname"><b>Username</b></label>
-            <input type="text" placeholder="Enter Username" name="uname" required />
+            <input
+                type="text"
+                placeholder="Enter Username"
+                name="uname"
+                required
+            />
         </div>
 
         <div>
             <label for="psw"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" name="psw" required />
+            <input
+                type="password"
+                placeholder="Enter Password"
+                name="psw"
+                required
+            />
         </div>
 
+
         <button type="submit">Sign Up</button>
+
     </form>
 </div>
 
 <style>
+
 :global(#loginBox) {
     position: relative;
     width: 300px;
