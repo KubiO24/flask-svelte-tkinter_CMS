@@ -15,11 +15,6 @@
 </header>
 
 <style>
-    :global(body) {
-        position: fixed;
-        margin: 0;
-        padding: 0;
-    }
     header {
         display: flex;
         justify-content: space-around;
