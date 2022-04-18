@@ -18,6 +18,8 @@
     "svelte": "^3.0.0"
   },
   "dependencies": {
+    "sass": "^1.50.0",
+    "scss": "^0.2.4",
     "sirv-cli": "^2.0.0",
     "svelte-spa-router": "^3.2.0"
   }
