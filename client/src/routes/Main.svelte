@@ -1,6 +1,7 @@
 <script>
     import Header from "../components/header.svelte";
     import NewsContainer from "../components/NewsContainer.svelte";
+    import Footer from "../components/footer.svelte";
 
     let showSlider = true;
     let showNews = true;
@@ -38,22 +39,26 @@
 {/if}
 
 {#if someSec}
-    <div class="someSec">
-        <div class="left">
-            <div>
-                <h2>First featurette heading.</h2>
-                <h3>It will blow your mind</h3>
+    <div class="some-sec-container">
+        <div class="someSec">
+            <div class="left">
+                <div>
+                    <h2>First featurette heading.</h2>
+                    <h3>It will blow your mind</h3>
+                </div>
+                <div>
+                    Some great placeholder content for the first featurette
+                    here. Imagine some exciting prose here.
+                </div>
             </div>
-            <div>
-                Some great placeholder content for the first featurette here.
-                Imagine some exciting prose here.
+            <div class="right">
+                <div>500 x 500</div>
             </div>
-        </div>
-        <div class="right">
-            <div>500 x 500</div>
         </div>
     </div>
 {/if}
+
+<Footer />
 
 <style>
     .slider {
@@ -90,5 +95,15 @@
     .right div {
         width: 500px;
         height: 500px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: grey;
+        font-size: 50px;
+    }
+    .some-sec-container {
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
     }
 </style>
