@@ -1,8 +1,27 @@
 <script>
     export let type;
     
-    function validateLogin() {
-        console.log("login submit");
+    async function validateLogin() {
+        let formEl = document.forms.loginForm;
+        let formData = new FormData(formEl);
+
+        const res = await fetch('./login', {
+			method: 'POST',
+			body: JSON.stringify({
+				username: formData.get('username'),
+                password: formData.get('password'),
+            }),
+            headers: {
+                "content-type": "application/json"
+            }
+        })
+
+        const result = await res.text()
+        if(result == '1') {
+            console.log("Success")
+        }else {
+            console.log("Error")
+        }
     }
 
     async function validateRegister() {
@@ -52,8 +71,8 @@
 </script>
 
 <div id="loginBox">
+    <a href="/#" id="returnButton">✖</a>
     <form id="loginForm" style={type=="register" ? 'cursor:pointer;' : undefined} on:click={type=="register" ? changeType : undefined} on:submit|preventDefault={type=="login" ? validateLogin : undefined}>
-        
         <h2>Log In</h2>
 
         <div>
@@ -76,7 +95,7 @@
 
         <button id="loginButton" type="submit">Log In</button>
     </form>
-    <form id="registerForm" class:activeLogin={type=="login"} style={type=="login" ? 'cursor:pointer; transform: translateY(280px);' : undefined} on:click={type=="login" ? changeType : undefined} on:submit|preventDefault={type=="register" ? validateRegister : undefined}>
+    <form id="registerForm" class:activeLogin={type=="login"} style={type=="login" ? 'cursor:pointer; transform: translateY(285px);' : undefined} on:click={type=="login" ? changeType : undefined} on:submit|preventDefault={type=="register" ? validateRegister : undefined}>
         <h2>Sign Up</h2>
 
         <div>
@@ -188,7 +207,7 @@
     #registerForm {
         position: absolute;
         width: 700px;
-        height: 350px;
+        height: 345px;
         bottom: 0;
     
         background: linear-gradient(to right, #FF4B2B, #FF416C);
@@ -205,7 +224,7 @@
 
      
     #registerForm h2 {
-        margin-top: -10px;
+        margin-top: 0px;
     }
     
     .cursorPointer {
@@ -213,7 +232,6 @@
     }
 
     input {
-        
         border-radius: 5px;
         height: 50px;
         line-height: normal;
@@ -224,8 +242,21 @@
         user-select: auto;
         font-size: 16px;
         padding: 0 6px;
-        padding-left: 12px;
-                
+        padding-left: 12px;     
     }
 
+    #returnButton {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+
+        color: #FF4B2B;
+        font-size: 1.5em;
+        text-decoration: none;
+        transition: .3s ease-in-out;
+    }
+
+    #returnButton:hover {
+        transform: rotate(90deg);
+    }
 </style>

@@ -23,7 +23,7 @@ myConnection.commit()
 
 def userExist(username):
     myCursor = myConnection.cursor()
-    myCursor.execute(f'SELECT EXISTS(SELECT 1 FROM userList WHERE username="{username}")')
+    myCursor.execute(f'SELECT EXISTS(SELECT 1 FROM userList WHERE LOWER(username)=LOWER("{username}"))')
     row = myCursor.fetchall()
     if(row[0][0] == 1):
         return True
@@ -48,7 +48,7 @@ def register():
     password = data["password"]
     email = data["email"]
 
-    if(userExist(username)):
+    if userExist(username):
         return '0'
 
     myCursor.execute(f"""INSERT INTO userList
@@ -57,6 +57,20 @@ def register():
         ('{username}','{email}','{password}',0)""")
     myConnection.commit()
     return '1'
+
+@app.route("/login", methods = ['POST'])
+def login():
+    data = request.json
+    username = data["username"]
+    password = data["password"]
+
+    myCursor = myConnection.cursor()
+    myCursor.execute(f'SELECT EXISTS(SELECT 1 FROM userList WHERE LOWER(username)=LOWER("{username}") AND password="{password}")')
+    row = myCursor.fetchall()
+    if (row[0][0] == 1):
+        return '1'
+
+    return '0'
 
 if __name__ == "__main__":
     app.run(debug=True)
