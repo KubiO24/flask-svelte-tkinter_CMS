@@ -226,10 +226,6 @@
     #registerForm h2 {
         margin-top: 0px;
     }
-    
-    .cursorPointer {
-        cursor: pointer;
-    }
 
     input {
         border-radius: 5px;
@@ -254,9 +250,5 @@
         font-size: 1.5em;
         text-decoration: none;
         transition: .3s ease-in-out;
-    }
-
-    #returnButton:hover {
-        transform: rotate(90deg);
     }
 </style>

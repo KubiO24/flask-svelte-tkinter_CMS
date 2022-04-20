@@ -8,12 +8,18 @@ myConnection = sqlite3.connect('data.sqlite', check_same_thread=False)
 myCursor = myConnection.cursor()
 
 myCursor.execute("""CREATE TABLE IF NOT EXISTS userList (
-    clientID INT AUTO_INCREMENT PRIMARY KEY,
     username TEXT,
     email TEXT,
     password TEXT,
     userType INT
 )""")
+
+# add admin if not exists
+myCursor.execute("""
+    INSERT INTO userList (username, email, password, userType)
+    SELECT 'admin', 'admin', 'admin', 2
+    WHERE NOT EXISTS(SELECT 1 FROM userList WHERE username = 'admin');
+""")
 
 myConnection.commit()
 
