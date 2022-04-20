@@ -1,17 +1,34 @@
 <script>
     export let type;
     
-    // let rand = -1;
-    // fetch("./rand")
-    //     .then((d) => d.text())
-    //     .then((d) => (rand = d));
-    
     function validateLogin() {
         console.log("login submit");
     }
 
-    function validateRegister() {
-        console.log("register submit");
+    async function validateRegister() {
+        let formEl = document.forms.registerForm;
+        let formData = new FormData(formEl);
+
+        const res = await fetch('./register', {
+			method: 'POST',
+			body: JSON.stringify({
+				username: formData.get('username'),
+                password: formData.get('password'),
+                email: formData.get('email')
+            }),
+            headers: {
+                "content-type": "application/json"
+            }
+        })
+
+        // const json = await res.json()
+		// let result = JSON.stringify(json)
+        const result = await res.text()
+        if(result == '1') {
+            console.log("Success")
+        }else {
+            console.log("Error")
+        }
     }
 
     function changeType() {
@@ -40,21 +57,19 @@
         <h2>Log In</h2>
 
         <div>
-            <label for="uname"><b>Username</b></label>
             <input
                 type="text"
-                placeholder="Enter Username"
-                name="uname"
+                placeholder="Username"
+                name="username"
                 required
             />
         </div>
 
         <div>
-            <label for="psw"><b>Password</b></label>
             <input
                 type="password"
-                placeholder="Enter Password"
-                name="psw"
+                placeholder="Password"
+                name="password"
                 required
             />
         </div>
@@ -65,21 +80,28 @@
         <h2>Sign Up</h2>
 
         <div>
-            <label for="uname"><b>Username</b></label>
             <input
                 type="text"
-                placeholder="Enter Username"
-                name="uname"
+                placeholder="Username"
+                name="username"
                 required
             />
         </div>
 
         <div>
-            <label for="psw"><b>Password</b></label>
+            <input
+                type="text"
+                placeholder="Email"
+                name="email"
+                required
+            />
+        </div>
+
+        <div>
             <input
                 type="password"
-                placeholder="Enter Password"
-                name="psw"
+                placeholder="Password"
+                name="password"
                 required
             />
         </div>
@@ -180,7 +202,8 @@
     
         transition: .8s ease-in-out;
     }
-    
+
+     
     #registerForm h2 {
         margin-top: -10px;
     }
@@ -188,4 +211,21 @@
     .cursorPointer {
         cursor: pointer;
     }
+
+    input {
+        
+        border-radius: 5px;
+        height: 50px;
+        line-height: normal;
+        color: #282828;
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+        user-select: auto;
+        font-size: 16px;
+        padding: 0 6px;
+        padding-left: 12px;
+                
+    }
+
 </style>

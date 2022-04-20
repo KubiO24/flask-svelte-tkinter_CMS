@@ -18,6 +18,8 @@
 
 <style>
   :global(body) {
+    position: absolute;
+    top: 0;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
