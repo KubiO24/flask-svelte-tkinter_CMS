@@ -1,5 +1,16 @@
 <script>
     export let type;
+    let loginError = '';
+    let loginErrorColor = 'red';
+    let registerError = '';
+
+    if(localStorage.getItem("userCreated") != null && localStorage.getItem("userCreated") != 'null') {
+        localStorage.setItem("userCreated", null);
+        loginErrorColor = 'green';
+        loginError = 'Account created, try to log in';
+        console.log(localStorage.getItem("userCreated"))
+    }
+    
     
     async function validateLogin() {
         let formEl = document.forms.loginForm;
@@ -18,9 +29,11 @@
 
         const result = await res.text()
         if(result == '1') {
-            console.log("Success")
+            localStorage.setItem("userLoginned", formData.get('username'));
+            document.location.href = "/#/Settings";
         }else {
-            console.log("Error")
+            loginErrorColor = 'red';
+            loginError = 'Invalid username or password';
         }
     }
 
@@ -40,13 +53,18 @@
             }
         })
 
-        // const json = await res.json()
-		// let result = JSON.stringify(json)
+
         const result = await res.text()
         if(result == '1') {
-            console.log("Success")
+            type = "login";
+            loginErrorColor = 'green';
+            loginError = 'Account created, try to log in';
+            setTimeout( function() { 
+                localStorage.setItem("userCreated", true);
+                document.location.href = "/#/Login";  
+            }, 800);
         }else {
-            console.log("Error")
+            registerError = 'This username is already taken';
         }
     }
 
@@ -93,7 +111,9 @@
             />
         </div>
 
-        <button id="loginButton" type="submit">Log In</button>
+        <button tabindex="-1" id="loginButton" type="submit">Log In</button>
+
+        <span id="loginError" style="color: {loginErrorColor};">{loginError}</span>
     </form>
     <form id="registerForm" class:activeLogin={type=="login"} style={type=="login" ? 'cursor:pointer; transform: translateY(285px);' : undefined} on:click={type=="login" ? changeType : undefined} on:submit|preventDefault={type=="register" ? validateRegister : undefined}>
         <h2>Sign Up</h2>
@@ -125,7 +145,9 @@
             />
         </div>
 
-        <button id="registerButton" type="submit">Sign Up</button>
+        <button tabindex="-1" id="registerButton" type="submit">Sign Up</button>
+
+        <span id="registerError">{registerError}</span>
     </form>
 </div>
 
@@ -250,5 +272,15 @@
         font-size: 1.5em;
         text-decoration: none;
         transition: .3s ease-in-out;
+    }
+
+    #loginError {
+        margin-bottom: 22px;
+        margin-top: -70px;
+    }
+
+    #registerError {
+        color: white;
+        margin-top: -10px;
     }
 </style>

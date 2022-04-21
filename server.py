@@ -75,8 +75,15 @@ def login():
     row = myCursor.fetchall()
     if (row[0][0] == 1):
         return '1'
-
     return '0'
+
+@app.route("/getPermission", methods = ['POST'])
+def getPermission():
+    username = request.data.decode("utf-8")
+    myCursor = myConnection.cursor()
+    myCursor.execute(f'SELECT userType FROM userList WHERE userName = "{username}";')
+    permission = myCursor.fetchall()[0][0]
+    return str(permission)
 
 if __name__ == "__main__":
     app.run(debug=True)
