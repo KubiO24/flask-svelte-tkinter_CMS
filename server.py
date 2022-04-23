@@ -81,9 +81,17 @@ def login():
 def getPermission():
     username = request.data.decode("utf-8")
     myCursor = myConnection.cursor()
-    myCursor.execute(f'SELECT userType FROM userList WHERE userName = "{username}";')
+    myCursor.execute(f'SELECT userType FROM userList WHERE LOWER(userName) = LOWER("{username}");')
     permission = myCursor.fetchall()[0][0]
     return str(permission)
+
+@app.route("/getProperUsername", methods = ['POST'])
+def getProperUsername():
+    username = request.data.decode("utf-8")
+    myCursor = myConnection.cursor()
+    myCursor.execute(f'SELECT userName FROM userList WHERE LOWER(userName) = LOWER("{username}");')
+    userName = myCursor.fetchall()[0][0]
+    return str(userName)
 
 if __name__ == "__main__":
     app.run(debug=True)

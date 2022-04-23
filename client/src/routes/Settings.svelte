@@ -2,7 +2,7 @@
     let username, permissionLevel, permission;
 
     username = localStorage.getItem("userLoginned");
-    if(username == null) document.location.href = "/#/Login";
+    if(username == null || username == 'null') document.location.href = "/#/Login";
 
     permissionLevel = "0";
     getPermission();
@@ -24,32 +24,42 @@
         }
     }
 
-    
+    function logout() {
+        localStorage.setItem("userLoginned", null);
+        document.location.href = "/#/Login";
+    }
+
+    function preview() {
+        document.location.href = "/";
+    }
     
 </script>
     <div class="settingsBox">
-        <div class="nav flex-row-between">
-            <div class="data flex-row-between">
+        <div class="nav flex-row">
+            <div class="data flex-row">
                 <div id="username">Username: <b>{username}</b></div>
-                <div id="permission">Type: <b>{permission}</b></div>
+                <div id="permission">Permission: <b>{permission}</b></div>
             </div>
 
-            <div class="control flex-row-between">
-                <button>Preview</button>
-                <button>Logout</button>
+            <div class="control flex-row">
+                <button on:click={preview}>Go to page</button>
+                <button on:click={logout}>Logout</button>
             </div>
         </div>
+        
         <div class="content">content</div>  
     </div>
 
 
 <style>
     .settingsBox {
-        width: 80%;
+        width: 60%;
 
         margin: auto;
         margin-top: 100px;
 
+        box-shadow: 0 0 20px 4px rgba(0, 0, 0, 0.25);
+        /* box-shadow: 0 0 20px 4px rgba(255, 75, 43, 0.25); */
         border: 2px solid #FF4B2B;
         border-radius: 15px;
 
@@ -57,14 +67,16 @@
     }
 
     .nav {
-        padding: 10px 20px;
+        padding: 10px 10px;
         background-color: #ebebeb;
         flex-wrap: wrap;
+        justify-content: center;
     }
 
     .data {
-        width: 20%;
-        min-width: 150px;
+        width: 50%;
+        min-width: 200px;  
+        justify-content: left;
     }
 
     .data div {
@@ -72,8 +84,9 @@
     }
 
     .control {
-        width: 15%;
-        min-width: 150px;
+        width: 50%;
+        min-width: 200px;
+        justify-content: right;
     }
 
     .control button {
@@ -81,10 +94,13 @@
         margin: 0px 10px;
     }
 
-    .flex-row-between {
+    .content {
+        padding: 10px 10px;
+    }
+
+    .flex-row {
         display: flex;
         flex-direction: row;
-        justify-content: space-between;
         align-items: center;
     }
 </style>

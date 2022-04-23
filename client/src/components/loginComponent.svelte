@@ -29,8 +29,15 @@
 
         const result = await res.text()
         if(result == '1') {
-            localStorage.setItem("userLoginned", formData.get('username'));
-            document.location.href = "/#/Settings";
+            const res = await fetch('./getProperUsername', {
+                method: 'POST',
+                body: formData.get('username')
+            })
+            await res.text().then((username) => {
+                localStorage.setItem("userLoginned", username);
+                document.location.href = "/#/Settings";
+            })
+            
         }else {
             loginErrorColor = 'red';
             loginError = 'Invalid username or password';
@@ -52,7 +59,6 @@
                 "content-type": "application/json"
             }
         })
-
 
         const result = await res.text()
         if(result == '1') {
