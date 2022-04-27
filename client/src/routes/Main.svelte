@@ -13,11 +13,11 @@
             font: "Roboto" // domyślna czcionka
         },
 
-        blocks: { // lista bloków w kolejności od pierwszego do ostatniego
+        blocks: [ // lista bloków w kolejności od pierwszego do ostatniego
             {
                 type: "navbar", // Typ bloku
                 navbarType: "horizontal(normalne) / vertical(hamburger)", // Zmianę sposobu wyświetlania menu (klasyczne i inne)
-                navbarItems: {
+                navbarItems: [
                     {
                         navbarText: "Features",   
                         navbarLink: "/#/Features"
@@ -30,14 +30,14 @@
                         ...
                     },
                     ... 
-                }
+                ]
             },
 
             {
                 type: "slider",
                 sliderDuration: 500, // Ustawienie czasu przejścia slidera w milisekundach 
                 sliderColor: "white", // kolor czcionki slidera
-                sliderItems: {
+                sliderItems: [
                     {
                         sliderPhoto: "../static/xyz1.jpg", // Ścieżka do zdjęcia slidera
                         sliderText: "Teskt1 na sliderze"
@@ -47,13 +47,13 @@
                         sliderText: "Teskt2 na sliderze"
                     },
                     ...
-                }
+                ]
                 
             },
 
             {
                 type: "news",
-                newsItems: {
+                newsItems: [
                     {
                         newsCategory: "Kategoria artykułu",
                         newsTitle: "Tytuł artykułu", // Zrobie tak, że nie będzie można dać dwóch takich samych tytułów, więc później jak się wejdzie w artukuł to będzie można pobierać jego komentarze z serwera po tytule
@@ -67,7 +67,7 @@
                         newsPhoto: "Ścieżka do zdjęcia artykułu"
                     },
                     ...
-                }
+                ]
                 
             },
 
@@ -75,7 +75,7 @@
                 type: "footer",
                 footerText: "Jakub Kowal - Igor Świerczyński CMS 2022",
             }
-        }
+        ]
     }
 
  -->

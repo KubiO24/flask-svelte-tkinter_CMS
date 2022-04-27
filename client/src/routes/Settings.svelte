@@ -1,5 +1,10 @@
 <script>
-  let username, permissionLevel, permission;
+  import Themes from "../components/settings/themes.svelte";
+  import BlockOrder from "../components/settings/blockOrder.svelte";
+  import UserList from "../components/settings/userList.svelte";
+
+  let username, permissionLevel, permission, selectedSetting, settingProps;
+  selectedSetting = Themes;
 
   username = localStorage.getItem("userLoginned");
   if (username == null || username == "null")
@@ -33,6 +38,26 @@
   function preview() {
     document.location.href = "/";
   }
+
+  function open(x) {
+    switch (x) {
+      case 'themes':
+        selectedSetting = Themes;
+        settingProps = {}
+        break;
+      case 'blockOrder':
+        selectedSetting = BlockOrder;
+        settingProps = {}
+        break;
+      case 'userList':
+        selectedSetting = UserList;
+        settingProps = {permissionLevel: permissionLevel}
+        break;
+      default:
+        console.log(`Failed to open: ${x}`);
+}
+
+  }
 </script>
 
 <div class="settingsBox">
@@ -50,11 +75,15 @@
 
   <div class="flex-row">
     <div class="menu">
-      <div>Themes</div>
-      <div>Block Order</div>
+      <div on:click={() => open("themes")}>Themes</div>
+      <div on:click={() => open("blockOrder")}>Block Order</div>
       <div>Slider</div>
+      <div on:click={() => open("userList")}>User List</div>
     </div>
-    <div class="settings">43</div>
+
+    <div class="settings">
+      <svelte:component this={selectedSetting} {...settingProps}/>
+    </div>
   </div>
 </div>
 
@@ -109,6 +138,8 @@
   }
 
   .menu {
+    height: 100%;
+    
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -132,10 +163,12 @@
 
   .settings {
     width: 100%;
+    position: relative;
     height: 100%;
 
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow-y: scroll;
   }
 </style>

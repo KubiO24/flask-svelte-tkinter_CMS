@@ -1,6 +1,7 @@
+import flask
 from flask import Flask, send_from_directory, request
-import random
 import sqlite3
+import json
 
 app = Flask(__name__)
 myConnection = sqlite3.connect('data.sqlite', check_same_thread=False)
@@ -92,6 +93,18 @@ def getProperUsername():
     myCursor.execute(f'SELECT userName FROM userList WHERE LOWER(userName) = LOWER("{username}");')
     userName = myCursor.fetchall()[0][0]
     return str(userName)
+
+@app.route("/getUserList", methods = ['POST'])
+def getUserList():
+    permissionLevel = request.json['permissionLevel']
+    username = request.json['username']
+    myCursor = myConnection.cursor()
+    if permissionLevel == '2':
+        myCursor.execute(f'SELECT * FROM userList ORDER BY userType DESC')
+    else:
+        myCursor.execute(f'SELECT * FROM userList WHERE LOWER(username)=LOWER("{username}")')
+    userList = json.dumps(myCursor.fetchall())
+    return userList
 
 if __name__ == "__main__":
     app.run(debug=True)
