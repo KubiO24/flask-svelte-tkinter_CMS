@@ -3,7 +3,7 @@
   import BlockOrder from "../components/settings/blockOrder.svelte";
   import UserList from "../components/settings/userList.svelte";
 
-  let username, permissionLevel, permission, selectedSetting, settingProps;
+  let username, permissionLevel, permission, selectedSetting, settingProps, menuHeight;
   selectedSetting = Themes;
 
   username = localStorage.getItem("userLoginned");
@@ -74,14 +74,14 @@
   </div>
 
   <div class="flex-row">
-    <div class="menu">
+    <div class="menu" bind:clientHeight={menuHeight}>
       <div on:click={() => open("themes")}>Themes</div>
       <div on:click={() => open("blockOrder")}>Block Order</div>
       <div>Slider</div>
       <div on:click={() => open("userList")}>User List</div>
     </div>
 
-    <div class="settings">
+    <div class="settings" style="height: {menuHeight}px;">
       <svelte:component this={selectedSetting} {...settingProps}/>
     </div>
   </div>
@@ -129,6 +129,7 @@
   .control button {
     padding: 5px 10px;
     margin: 0px 10px;
+    white-space: nowrap;
   }
 
   .flex-row {
@@ -146,10 +147,11 @@
     justify-content: left;
 
     background-color: #ebebeb;
+    border-right: 2px solid #ff4b2b;
   }
 
   .menu div {
-    margin: 20px 10px;
+    margin: 20px 15px;
     cursor: pointer;
     white-space: nowrap;
     transition: all 0.2s ease-in-out;
@@ -164,11 +166,12 @@
   .settings {
     width: 100%;
     position: relative;
-    height: 100%;
 
     display: flex;
     justify-content: center;
     align-items: center;
+    
     overflow-y: scroll;
+    overflow-x: hidden;
   }
 </style>

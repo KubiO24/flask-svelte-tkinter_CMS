@@ -100,7 +100,7 @@ def getUserList():
     username = request.json['username']
     myCursor = myConnection.cursor()
     if permissionLevel == '2':
-        myCursor.execute(f'SELECT * FROM userList ORDER BY userType DESC')
+        myCursor.execute(f'SELECT * FROM userList ORDER BY userType DESC, username ASC')
     else:
         myCursor.execute(f'SELECT * FROM userList WHERE LOWER(username)=LOWER("{username}")')
     userList = json.dumps(myCursor.fetchall())

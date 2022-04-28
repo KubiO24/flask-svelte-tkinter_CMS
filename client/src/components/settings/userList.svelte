@@ -1,7 +1,11 @@
 <script>
+    import userListElement from "./userListElement.svelte";
+
     export let permissionLevel;
     let username = localStorage.getItem("userLoginned");
     let userList = [];
+    let props;
+
     getUserList();
     
     async function getUserList() {
@@ -28,22 +32,22 @@
             <th>Email</th>
             <th>Password</th>
             <th>Permission Level</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
         {#each userList as user}
-            <tr>
-                <td>{user[0]}</td>
-                <td>{user[1]}</td>
-                <td>{user[2]}</td>
-                <td>{user[3]}</td>
-            </tr> 
+            <svelte:component this={userListElement} user={user}/>
         {/each}  
     <tbody>
 </table>
 
 <style>
 .fl-table {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
     border-radius: 5px;
     font-size: 12px;
     font-weight: normal;
@@ -65,15 +69,22 @@
     font-size: 12px;
 }
 
+.fl-table td button {
+    padding: 5px 10px;
+    /* background-color: #4fce43; */
+    color: white;
+    border: none;
+}
+
 .fl-table thead th {
     color: #ffffff;
-    background: #ff4b2b;
+    background: #ff6d53;
 }
 
 
 .fl-table thead th:nth-child(odd) {
     color: #ffffff;
-    background: #324960;
+    background: #474747;
 }
 
 .fl-table tr:nth-child(even) {
@@ -85,16 +96,8 @@
 @media (max-width: 1100px) {
     .fl-table {
         display: block;
-        width: 100%;
     }
-    .table-wrapper:before{
-        content: "Scroll horizontally >";
-        display: block;
-        text-align: right;
-        font-size: 11px;
-        color: white;
-        padding: 0 0 10px;
-    }
+
     .fl-table thead, .fl-table tbody, .fl-table thead th {
         display: block;
     }
