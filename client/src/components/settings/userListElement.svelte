@@ -4,14 +4,16 @@
     export let user;
     let originalUsername = user[0];
     let element_username, element_email, element_password, element_permission, element_firstButton, element_secondButton;
+    let firstButton_action = edit;
+    let secondButton_action = Delete;
 
     onMount(async () => {
-		element_username = document.getElementById('userList_username');
-        element_email = document.getElementById('userList_email');
-        element_password = document.getElementById('userList_password');
-        element_permission = document.getElementById('userList_permission');
-        element_firstButton = document.getElementById('userList_firstButton');
-        element_secondButton = document.getElementById('userList_secondButton');
+		element_username = document.getElementById(`userList_username_${originalUsername}`);
+        element_email = document.getElementById(`userList_email_${originalUsername}`);
+        element_password = document.getElementById(`userList_password_${originalUsername}`);
+        element_permission = document.getElementById(`userList_permission_${originalUsername}`);
+        element_firstButton = document.getElementById(`userList_firstButton_${originalUsername}`);
+        element_secondButton = document.getElementById(`userList_secondButton_${originalUsername}`);
 	});
 
     function edit() {
@@ -28,29 +30,73 @@
         element_permission.style.fontStyle = 'italic';
 
         element_firstButton.innerHTML = "Save";
-        element_firstButton.style.backgroundColor = "#4fce43";
+        element_firstButton.style.backgroundColor = "#45a13c";
+        firstButton_action = save;
+
         element_secondButton.innerHTML = "Discard";
+        element_secondButton.style.backgroundColor = "#ff5353";
+        secondButton_action = discard;
     }
 
     function save() {
-        return;
+        element_username.contentEditable = false;
+        element_username.style.fontStyle = 'normal';
+
+        element_email.contentEditable = false;
+        element_email.style.fontStyle = 'normal';
+
+        element_password.contentEditable = false;
+        element_password.style.fontStyle = 'normal';
+
+        element_permission.contentEditable = false;
+        element_permission.style.fontStyle = 'normal';
+
+        element_firstButton.innerHTML = "Edit";
+        element_firstButton.style.backgroundColor = "#43b9ce";
+        firstButton_action = edit;
+
+        element_secondButton.innerHTML = "Delete";
+        element_secondButton.style.backgroundColor = "#ff5353";
+        secondButton_action = Delete;
     }
 
     function discard() {
-        return
+        element_username.contentEditable = false;
+        element_username.style.fontStyle = 'normal';
+
+        element_email.contentEditable = false;
+        element_email.style.fontStyle = 'normal';
+
+        element_password.contentEditable = false;
+        element_password.style.fontStyle = 'normal';
+
+        element_permission.contentEditable = false;
+        element_permission.style.fontStyle = 'normal';
+
+        element_firstButton.innerHTML = "Edit";
+        element_firstButton.style.backgroundColor = "#43b9ce";
+        firstButton_action = edit;
+
+        element_secondButton.innerHTML = "Delete";
+        element_secondButton.style.backgroundColor = "#ff5353";
+        secondButton_action = Delete;
+    }
+
+    function Delete() {
+        console.log("Delete")
     }
 
 
 </script>
 
 <tr>
-    <td id="userList_username">{user[0]}</td>
-    <td id="userList_email">{user[1]}</td>
-    <td id="userList_password">{user[2]}</td>
-    <td id="userList_permission">{user[3]}</td>
+    <td id="userList_username_{originalUsername}">{user[0]}</td>
+    <td id="userList_email_{originalUsername}">{user[1]}</td>
+    <td id="userList_password_{originalUsername}">{user[2]}</td>
+    <td id="userList_permission_{originalUsername}">{user[3]}</td>
     <td style='display: flex; justify-content: space-evenly;'>
-        <button id='userList_firstButton' on:click={edit} style="background-color: #43b9ce;">Edit</button>
-        <button id='userList_secondButton' style="background-color: #ff5353;">Delete</button>
+        <button id='userList_firstButton_{originalUsername}' style="background-color: #43b9ce;" on:click={firstButton_action}>Edit</button>
+        <button id='userList_secondButton_{originalUsername}' style="background-color: #ff5353;" on:click={secondButton_action}>Delete</button>
     </td>
 </tr>
 
@@ -68,7 +114,7 @@
     
     td button {
         padding: 5px 10px;
-        color: white;
+        color: white !important;
         border: none;
     }
     

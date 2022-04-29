@@ -172,6 +172,6 @@
     align-items: center;
     
     overflow-y: scroll;
-    overflow-x: hidden;
+    overflow-x: auto;
   }
 </style>
