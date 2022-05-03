@@ -5,10 +5,22 @@
     export let color;
 
     let active = false;
+
+    const toggleMenu = () => {
+        active ? (active = false) : (active = true);
+
+        if (active) {
+            document.getElementById("sideMenu").classList.remove("hide");
+            document.getElementById("darkBg").classList.remove("hideBg");
+        } else {
+            document.getElementById("sideMenu").classList.add("hide");
+            document.getElementById("darkBg").classList.add("hideBg");
+        }
+    };
 </script>
 
 <header style="background-color: {background};">
-    {#if navbarType !== "horizontal"}
+    {#if navbarType === "horizontal"}
         <div class="nav-container" style="padding: 0 20px;">Icon</div>
         <nav>
             <div class="nav-links nav-container">
@@ -34,20 +46,57 @@
             class="nav-container hamburger-menu"
             style="padding: 0 20px; justify-content:end;"
         >
-            {#if active}
-                <i class="fa fa-bars" style="font-size:36px" />
-            {:else}
-                <i class="fa fa-close" style="font-size:36px" />
-            {/if}
+            <div on:click={toggleMenu} class="menu-button">
+                {#if active}
+                    <i class="fa fa-close" style="font-size:36px" />
+                {:else}
+                    <i class="fa fa-bars" style="font-size:36px" />
+                {/if}
+            </div>
         </div>
     {/if}
 </header>
 
+{#if navbarType === "vertical"}
+    <div class="dark-bg hideBg" id="darkBg" />
+    <div
+        class="side-menu hide"
+        style="background-color: {background};"
+        id="sideMenu"
+    >
+        <nav>
+            {#each navbarItems as item}
+                <a style="color: {color}" href={item.navbarLink}
+                    >{item.navbarText}</a
+                >
+            {/each}
+
+            <div class="side-links">
+                <a href="/#/Login" class="linkLogin">Login</a>
+                <a href="/#/Register" class="linkRegister">Register</a>
+            </div>
+        </nav>
+    </div>
+{/if}
+
 <style>
+    .dark-bg {
+        transition: all ease 0.8s;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.37);
+        z-index: 10;
+        opacity: 1;
+    }
+    .hideBg {
+        opacity: 0;
+    }
     header {
         display: flex;
         justify-content: space-around;
         padding: 40px;
+        z-index: 100;
     }
     .nav-container {
         width: 100%;
@@ -84,5 +133,36 @@
         border: 1px solid #4747ff;
         text-decoration: none;
         color: #4747ff;
+    }
+    .menu-button {
+        transition: all ease 0.8s;
+        cursor: pointer;
+    }
+    .side-menu {
+        width: 500px;
+        height: 100%;
+        z-index: 20;
+        position: fixed;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        transition: all ease 1s;
+        right: 0px;
+    }
+    .side-menu nav {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+    .side-menu nav > a {
+        margin: 20px;
+    }
+    .side-links {
+        margin-top: 200px;
+    }
+    .hide {
+        right: -500px;
     }
 </style>
