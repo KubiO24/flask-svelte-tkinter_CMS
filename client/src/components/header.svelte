@@ -1,14 +1,24 @@
-<header>
-    <nav>
-        <div style="padding: 0 20px;">Icon</div>
-        <div class="nav-links">
-            <a href="">Features</a>
-            <a href="">Pricing</a>
-            <a href="">FAQs</a>
-            <a href="">About</a>
-        </div>
-    </nav>
-    <div class="links">
+<script>
+    export let navbarType;
+    export let navbarItems;
+    export let background;
+    export let color;
+</script>
+
+<header style="background-color: {background};">
+    {#if navbarType === "horizontal"}
+        <div class="nav-container" style="padding: 0 20px;">Icon</div>
+        <nav>
+            <div class="nav-links nav-container">
+                {#each navbarItems as item}
+                    <a style="color: {color}" href={item.navbarLink}
+                        >{item.navbarText}</a
+                    >
+                {/each}
+            </div>
+        </nav>
+    {:else}{/if}
+    <div class="links nav-container">
         <a href="/#/Login" class="linkLogin">Login</a>
         <a href="/#/Register" class="linkRegister">Register</a>
     </div>
@@ -20,18 +30,30 @@
         justify-content: space-around;
         padding: 40px;
     }
+    .nav-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
     nav {
         width: 70%;
         max-width: 500px;
+    }
+    .nav-links {
         display: flex;
-        justify-content: start;
+        justify-content: space-around;
+        align-items: center;
     }
     .nav-links a {
         text-decoration: none;
-        color: black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
     .linkLogin {
         padding: 5px 10px;
+        margin: 0 6px;
         border-radius: 10px;
         border: 1px solid green;
         text-decoration: none;

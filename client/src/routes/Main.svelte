@@ -83,78 +83,138 @@
   import Header from "../components/header.svelte";
   import NewsContainer from "../components/NewsContainer.svelte";
   import Footer from "../components/footer.svelte";
+  import Slider from "../components/slider.svelte";
 
   let showSlider = true;
   let showNews = true;
-  let someSec = true;
+  let someSec = false;
 
-  const newsContent = [
-    {
-      title: "Special title treatment",
-      info: "With supporting text below as a natural lead-in to additional content.",
+  const data = {
+    theme: {
+      mainColor: "#ffffff", // główny kolor czcionki
+      secondColor: "#ff0000", // drugi kolor czcionki
+      mainBackground: "#333333", // główny kolor tła
+      secondBackground: "#222222", // drugi kolor tła, nie wiem można np sekcje jakaś zrobic w tym, albo co drugą albo tytuły newsow. Ważne zeby tymi dwoma kolorami dało się ogarnąć cała kolorystyke tej strony,
+      newsBorder: "#ee0000",
+      font: "Roboto", // domyślna czcionka
     },
-    {
-      title: "Special title treatment",
-      info: "With supporting text below as a natural lead-in to additional content.",
-    },
-    {
-      title: "Special title treatment",
-      info: "With supporting text below as a natural lead-in to additional content.",
-    },
-  ];
+
+    blocks: [
+      // lista bloków w kolejności od pierwszego do ostatniego
+      {
+        type: "navbar", // Typ bloku
+        navbarType: "horizontal", // Zmianę sposobu wyświetlania menu (klasyczne i inne)
+        //navbarType: "verical",
+        navbarItems: [
+          {
+            navbarText: "Features",
+            navbarLink: "/#/Features",
+          },
+          {
+            navbarText: "Pricing",
+            navbarLink: "/#/Pricing",
+          },
+        ],
+      },
+
+      {
+        type: "slider",
+        sliderDuration: 5000, // Ustawienie czasu przejścia slidera w milisekundach
+        sliderColor: "white", // kolor czcionki slidera
+        sliderItems: [
+          {
+            sliderPhoto: "../static/xyz1.jpg", // Ścieżka do zdjęcia slidera
+            sliderText: "Teskt1 na sliderze",
+          },
+          {
+            sliderPhoto: "../static/xyz2.jpg",
+            sliderText: "Teskt2 na sliderze",
+          },
+        ],
+      },
+
+      {
+        type: "news",
+        newsItems: [
+          {
+            newsCategory: "Kategoria artykułu",
+            newsTitle: "Tytuł artykułu", // Zrobie tak, że nie będzie można dać dwóch takich samych tytułów, więc później jak się wejdzie w artukuł to będzie można pobierać jego komentarze z serwera po tytule
+            newsText: "Opis artykułu",
+            newsPhoto: "Ścieżka do zdjęcia artykułu", // W sumie to nie wiem czy musi być zdjęcie, ale chyba lepiej będzie z, ale jak nie chcesz to możesz to wyjebać, tylko powiedz mi to żeby nie robił tego w ustawieniach
+          },
+          {
+            newsCategory: "Advice",
+            newsTitle: "Best protein flavours 2022",
+            newsText: "Jakis tam opis, to pozniej mozna wymyslec",
+            newsPhoto: "Ścieżka do zdjęcia artykułu",
+          },
+        ],
+      },
+
+      {
+        type: "footer",
+        footerText: "Jakub Kowal - Igor Świerczyński CMS 2022",
+      },
+    ],
+  };
+  let bgColor = data.theme.mainBackground;
+  let color = data.theme.mainColor;
+  console.log(bgColor, color);
 </script>
 
-<Header />
+<div
+  class="main-page-container"
+  style="background-color: {bgColor};color:{color};"
+>
+  <Header
+    navbarType={data.blocks[0].navbarType}
+    navbarItems={data.blocks[0].navbarItems}
+    background={data.theme.secondBackground}
+    color={data.theme.secondColor}
+  />
 
-{#if showSlider}
-  <div class="slider">
-    <p>Slider</p>
-  </div>
-{/if}
-{#if showNews}
-  <div class="newsContainer">
-    {#each newsContent as item, i}
-      <NewsContainer number={i} title={item.title} content={item.info} />
-    {/each}
-  </div>
-{/if}
+  {#if showSlider}
+    <Slider data={data.blocks[1]} />
+  {/if}
 
-{#if someSec}
-  <div class="some-sec-container">
-    <div class="someSec">
-      <div class="left">
-        <div>
-          <h2>First featurette heading.</h2>
-          <h3>It will blow your mind</h3>
+  {#if showNews}
+    <div class="newsContainer">
+      {#each data.blocks[2].newsItems as item, i}
+        <NewsContainer
+          category={item.newsCategory}
+          border={data.theme.newsBorder}
+          title={item.newsTitle}
+          content={item.newsText}
+          img={item.newsPhoto}
+        />
+      {/each}
+    </div>
+  {/if}
+
+  {#if someSec}
+    <div class="some-sec-container">
+      <div class="someSec">
+        <div class="left">
+          <div>
+            <h2>First featurette heading.</h2>
+            <h3>It will blow your mind</h3>
+          </div>
+          <div>
+            Some great placeholder content for the first featurette here.
+            Imagine some exciting prose here.
+          </div>
         </div>
-        <div>
-          Some great placeholder content for the first featurette here. Imagine
-          some exciting prose here.
+        <div class="right">
+          <div>500 x 500</div>
         </div>
-      </div>
-      <div class="right">
-        <div>500 x 500</div>
       </div>
     </div>
-  </div>
-{/if}
+  {/if}
 
-<Footer />
+  <Footer />
+</div>
 
 <style>
-  .slider {
-    width: 100%;
-    height: 500px;
-    background-color: grey;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .slider p {
-    font-size: 100px;
-    margin: 0;
-    padding: 0;
-  }
   .newsContainer {
     width: 100%;
     margin: 30px 0;

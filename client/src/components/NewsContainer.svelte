@@ -1,17 +1,21 @@
 <script>
-    export let number;
-    number += 1;
+    export let category;
     export let title;
     export let content;
-    console.log(number, title, content);
+    export let img;
+    export let border;
 </script>
 
-<div class="newsContainer">
-    <div class="navContainer">News {number}</div>
+<div class="newsContainer" style="border-color: {border};">
+    <div class="navContainer" style="background-color: {border};">
+        {category}
+    </div>
     <div class="newsContent">
         <h3>{title}</h3>
         <p>{content}</p>
-        <button>Go somewhere</button>
+        <button class="bt" style="border-color: {border};color:{border};"
+            >Visit Article</button
+        >
     </div>
 </div>
 
@@ -34,5 +38,11 @@
     }
     .newsContent {
         padding: 0 10px 10px 10px;
+    }
+    .bt {
+        border-radius: 20px;
+        background: none;
+        padding: 10px;
+        cursor: pointer;
     }
 </style>
