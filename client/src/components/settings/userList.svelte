@@ -4,7 +4,6 @@
     export let permissionLevel;
     let username = localStorage.getItem("userLoginned");
     let userList = [];
-    let props;
 
     getUserList();
     
