@@ -4,13 +4,14 @@
     const slides = [];
     const delay = data.sliderDuration;
     let currentSlide = 0;
+    let interval;
 
     data.sliderItems.forEach((item, i) => {
         slides.push("slide" + i);
     });
 
     window.onload = () => {
-        setInterval(changeSlide, delay);
+        interval = setInterval(changeSlide, delay);
     };
     const changeSlide = () => {
         const lastSlide = currentSlide;
@@ -18,8 +19,10 @@
         if (currentSlide === slides.length) currentSlide = 0;
         console.log(lastSlide, currentSlide);
 
-        document.getElementById(slides[lastSlide]).classList = "slider hide";
-        document.getElementById(slides[currentSlide]).classList = "slider show";
+        document.getElementById(slides[lastSlide]).classList.remove("show");
+        document.getElementById(slides[lastSlide]).classList.add("hide");
+        document.getElementById(slides[currentSlide]).classList.remove("hide");
+        document.getElementById(slides[currentSlide]).classList.add("show");
     };
 </script>
 

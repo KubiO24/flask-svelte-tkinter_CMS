@@ -130,6 +130,18 @@
             sliderPhoto: "../static/xyz2.jpg",
             sliderText: "Teskt2 na sliderze",
           },
+          {
+            sliderPhoto: "../static/xyz2.jpg",
+            sliderText: "Teskt3 na sliderze",
+          },
+          {
+            sliderPhoto: "../static/xyz2.jpg",
+            sliderText: "Teskt4 na sliderze",
+          },
+          {
+            sliderPhoto: "../static/xyz2.jpg",
+            sliderText: "Teskt5 na sliderze",
+          },
         ],
       },
 
