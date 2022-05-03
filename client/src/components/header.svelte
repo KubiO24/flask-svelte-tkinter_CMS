@@ -3,10 +3,12 @@
     export let navbarItems;
     export let background;
     export let color;
+
+    let active = false;
 </script>
 
 <header style="background-color: {background};">
-    {#if navbarType === "horizontal"}
+    {#if navbarType !== "horizontal"}
         <div class="nav-container" style="padding: 0 20px;">Icon</div>
         <nav>
             <div class="nav-links nav-container">
@@ -17,11 +19,28 @@
                 {/each}
             </div>
         </nav>
-    {:else}{/if}
-    <div class="links nav-container">
-        <a href="/#/Login" class="linkLogin">Login</a>
-        <a href="/#/Register" class="linkRegister">Register</a>
-    </div>
+        <div class="links nav-container">
+            <a href="/#/Login" class="linkLogin">Login</a>
+            <a href="/#/Register" class="linkRegister">Register</a>
+        </div>
+    {:else}
+        <div
+            class="nav-container"
+            style="padding: 0 20px; justify-content:start;"
+        >
+            Icon
+        </div>
+        <div
+            class="nav-container hamburger-menu"
+            style="padding: 0 20px; justify-content:end;"
+        >
+            {#if active}
+                <i class="fa fa-bars" style="font-size:36px" />
+            {:else}
+                <i class="fa fa-close" style="font-size:36px" />
+            {/if}
+        </div>
+    {/if}
 </header>
 
 <style>
