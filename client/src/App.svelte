@@ -13,7 +13,7 @@
       "/": Main,
       "/login": Login,
       "/register": Register,
-      "/settings": Settings
+      "/settings": Settings,
     }}
   />
 </main>

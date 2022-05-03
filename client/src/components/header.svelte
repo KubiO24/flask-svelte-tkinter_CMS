@@ -22,8 +22,8 @@
 <header style="background-color: {background};">
     {#if navbarType === "horizontal"}
         <div class="nav-container" style="padding: 0 20px;">Icon</div>
-        <nav>
-            <div class="nav-links nav-container">
+        <nav class="nav-container">
+            <div class="nav-links nav-container" style="width: 100%;">
                 {#each navbarItems as item}
                     <a style="color: {color}" href={item.navbarLink}
                         >{item.navbarText}</a
@@ -85,21 +85,25 @@
         position: fixed;
         width: 100%;
         height: 100%;
-        background-color: rgba(0, 0, 0, 0.37);
+        background-color: rgba(0, 0, 0, 0.4);
         z-index: 10;
+        display: block;
+        top: 116;
         opacity: 1;
     }
     .hideBg {
         opacity: 0;
+        display: none;
     }
     header {
+        position: fixed;
         display: flex;
         justify-content: space-around;
-        padding: 40px;
         z-index: 100;
+        height: 120px;
+        width: 100%;
     }
     .nav-container {
-        width: 100%;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -107,6 +111,7 @@
     nav {
         width: 70%;
         max-width: 500px;
+        z-index: 100;
     }
     .nav-links {
         display: flex;

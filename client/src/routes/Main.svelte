@@ -184,7 +184,10 @@
     background={data.theme.secondBackground}
     color={data.theme.secondColor}
   />
-
+  <div
+    style="padding: 60px
+  ;"
+  />
   {#if showSlider}
     <Slider data={data.blocks[1]} />
   {/if}
