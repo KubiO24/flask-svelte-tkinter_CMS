@@ -11,12 +11,21 @@
     <div class="sliderMain" style="color:{data.sliderColor};">
         <Carousel
             bind:this={carousel}
+            let:showPrevPage
+            let:showNextPage
             autoplay={true}
             autoplayDuration={delay}
             duration={800}
             autoplayProgressVisible={true}
             pauseOnFocus={true}
         >
+            <div
+                slot="prev"
+                on:click={showPrevPage}
+                class="custom-arrow custom-arrow-prev"
+            >
+                <i class="fa fa-angle-left" style="font-size:60px" />
+            </div>
             {#each data.sliderItems as item}
                 <!-- <div
                     class="slider"
@@ -28,6 +37,13 @@
                     <p>{item.sliderText}</p>
                 </div>
             {/each}
+            <div
+                slot="next"
+                on:click={showNextPage}
+                class="custom-arrow custom-arrow-next"
+            >
+                <i class="fa fa-angle-right" style="font-size:60px" />
+            </div>
         </Carousel>
     </div>
 {/if}
@@ -56,5 +72,21 @@
         font-size: 100px;
         margin: 0;
         padding: 0;
+    }
+    .custom-arrow {
+        width: 40px;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        z-index: 1;
+        transition: opacity 150ms ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+    }
+    .custom-arrow-next {
+        right: 0;
     }
 </style>
