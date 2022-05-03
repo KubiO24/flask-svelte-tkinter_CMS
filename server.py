@@ -29,6 +29,7 @@ myConnection.commit()
 
 
 def userExist(username):
+    print(username)
     myCursor = myConnection.cursor()
     myCursor.execute(f'SELECT EXISTS(SELECT 1 FROM userList WHERE LOWER(username)=LOWER("{username}"))')
     row = myCursor.fetchall()
@@ -105,6 +106,40 @@ def getUserList():
         myCursor.execute(f'SELECT * FROM userList WHERE LOWER(username)=LOWER("{username}")')
     userList = json.dumps(myCursor.fetchall())
     return userList
+
+@app.route("/deleteUser", methods = ['POST'])
+def deleteUser():
+    username = request.data.decode("utf-8")
+    myCursor = myConnection.cursor()
+    myCursor.execute(f'DELETE FROM userList WHERE LOWER(username)=LOWER("{username}");')
+    myConnection.commit()
+    print(username)
+    return "success"
+
+@app.route("/editUser", methods = ['POST'])
+def editUser():
+    print('editUser')
+    originalUsername = request.json['originalUsername']
+    username = str(request.json['username'])
+    email = request.json['email']
+    password = request.json['password']
+    permissionLevel = str(request.json['permissionLevel'])
+
+    if originalUsername.lower() != username.lower():
+        if userExist(username):
+            return {'type': "error", 'message': "This username is already taken"}
+
+    if permissionLevel != '0' and permissionLevel != '1' and permissionLevel != '2':
+        return {'type': "error", 'message': "Wrong permission level"}
+
+    myCursor = myConnection.cursor()
+    myCursor.execute(f"""
+        UPDATE userList 
+        SET username="{username}", email="{email}", password="{password}", userType="{permissionLevel}" 
+        WHERE LOWER(username)=LOWER("{originalUsername}");
+    """)
+    myConnection.commit()
+    return {'type': "success", 'message': "msg"}
 
 if __name__ == "__main__":
     app.run(debug=True)

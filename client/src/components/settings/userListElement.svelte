@@ -3,6 +3,9 @@
 
     export let user;
     let originalUsername = user[0];
+    let originalEmail = user[1];
+    let originalPassword = user[2];
+    let originalPermissionLevel = user[3];
     let element_username, element_email, element_password, element_permission, element_firstButton, element_secondButton;
     let firstButton_action = edit;
     let secondButton_action = Delete;
@@ -26,9 +29,11 @@
         element_password.contentEditable = true;
         element_password.style.fontStyle = 'italic';
 
-        element_permission.contentEditable = true;
-        element_permission.style.fontStyle = 'italic';
-
+        if(originalPermissionLevel == 2) {
+            element_permission.contentEditable = true;
+            element_permission.style.fontStyle = 'italic';
+        }
+        
         element_firstButton.innerHTML = "Save";
         element_firstButton.style.backgroundColor = "#45a13c";
         firstButton_action = save;
@@ -38,7 +43,7 @@
         secondButton_action = discard;
     }
 
-    function save() {
+    async function save() {
         element_username.contentEditable = false;
         element_username.style.fontStyle = 'normal';
 
@@ -50,7 +55,7 @@
 
         element_permission.contentEditable = false;
         element_permission.style.fontStyle = 'normal';
-
+        
         element_firstButton.innerHTML = "Edit";
         element_firstButton.style.backgroundColor = "#43b9ce";
         firstButton_action = edit;
@@ -58,6 +63,38 @@
         element_secondButton.innerHTML = "Delete";
         element_secondButton.style.backgroundColor = "#ff5353";
         secondButton_action = Delete;
+
+        if(originalPermissionLevel != 2) {
+            element_permission.innerHTML = originalPermissionLevel;
+        }
+
+        const res = await fetch('./editUser', {
+			method: 'POST',
+			body: JSON.stringify({
+				originalUsername: originalUsername,
+                username: element_username.innerText,
+                email: element_email.innerText,
+                password: element_password.innerText,
+                permissionLevel: element_permission.innerText
+            }),
+            headers: {
+                "content-type": "application/json"
+            }
+        })
+
+        const result = await res.json()
+        if(result['type'] != 'success'){
+            alert(result['message'])
+            element_username.innerHTML = originalUsername;
+            element_email.innerHTML = originalEmail;
+            element_password.innerHTML = originalPassword;
+            element_permission.innerHTML = originalPermissionLevel;
+        }else {
+            originalUsername = element_username.innerText;
+            originalEmail = element_email.innerText;
+            originalPassword = element_password.innerText;
+            originalPermissionLevel = element_permission.innerText;
+        }
     }
 
     function discard() {
@@ -82,19 +119,32 @@
         secondButton_action = Delete;
     }
 
-    function Delete() {
-        console.log("Delete")
+    async function Delete() {
+        console.log(originalUsername)
+        if(originalUsername.toLowerCase() == "admin") {
+            alert("You can't delete admin account!")
+            return;
+        }
+        
+        const res = await fetch('./deleteUser', {
+                method: 'POST',
+                body: originalUsername
+        })
+        const result = await res.text()
+        if(result != "success") alert("Error while deleting user")
+
+        document.getElementById(`userList_row_${originalUsername}`).remove();
     }
 
 
 </script>
 
-<tr>
+<tr id="userList_row_{originalUsername}">
     <td id="userList_username_{originalUsername}">{user[0]}</td>
     <td id="userList_email_{originalUsername}">{user[1]}</td>
     <td id="userList_password_{originalUsername}">{user[2]}</td>
     <td id="userList_permission_{originalUsername}">{user[3]}</td>
-    <td style='display: flex; justify-content: space-evenly;'>
+    <td class="userList_td_button" style='display: flex; justify-content: space-evenly;'>
         <button id='userList_firstButton_{originalUsername}' style="background-color: #43b9ce;" on:click={firstButton_action}>Edit</button>
         <button id='userList_secondButton_{originalUsername}' style="background-color: #ff5353;" on:click={secondButton_action}>Delete</button>
     </td>
@@ -105,20 +155,29 @@
     td {
         text-align: center;
         padding: 8px;
+        margin: auto;
     }
     
     td {
         border-right: 1px solid #f8f8f8;
         font-size: 12px;
     }
+
+    .userList_td_button {
+        display: flex;
+        align-items: center;
+        padding: 0;
+        height: 100%;
+    }
     
     td button {
-        padding: 5px 10px;
+        width: 50px;
+        height: 28px;
         color: white !important;
         border: none;
     }
     
-    tr:nth-child(even) {
+    tr:nth-child(even){
         background: #F8F8F8;
     }
     
