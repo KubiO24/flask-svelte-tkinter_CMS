@@ -23,7 +23,8 @@ myCursor.execute("""
     WHERE NOT EXISTS(SELECT 1 FROM userList WHERE username = 'admin');
 """)
 
-# themePresets table
+
+# themes table
 myCursor.execute("""CREATE TABLE IF NOT EXISTS themes (
     preset TEXT,
     mainColor TEXT,
@@ -34,25 +35,56 @@ myCursor.execute("""CREATE TABLE IF NOT EXISTS themes (
     font TEXT
 )""")
 
-# add light preset if not exists
+# add presets if not exists
 myCursor.execute("""
     INSERT INTO themes (preset, mainColor, secondColor, mainBackground, secondBackground, newsBorder, font)
     SELECT 'light', '#000000', '#000000', '#ffffff', '#cccccc', '#444444', 'Arial'
     WHERE NOT EXISTS(SELECT 1 FROM themes WHERE preset = 'light');
 """)
-
-# add dark preset if not exists
 myCursor.execute("""
     INSERT INTO themes (preset, mainColor, secondColor, mainBackground, secondBackground, newsBorder, font)
     SELECT 'dark', '#ffffff', '#ffffff', '#222222', '#333333', '#111111', 'Arial'
     WHERE NOT EXISTS(SELECT 1 FROM themes WHERE preset = 'dark');
 """)
-
-# add custom preset if not exists
 myCursor.execute("""
     INSERT INTO themes (preset, mainColor, secondColor, mainBackground, secondBackground, newsBorder, font)
     SELECT 'custom', '#000000', '#000000', '#ffffff', '#ffffff', '#cccccc', 'Arial'
     WHERE NOT EXISTS(SELECT 1 FROM themes WHERE preset = 'custom');
+""")
+
+
+# blocks table
+myCursor.execute("""CREATE TABLE IF NOT EXISTS blocks (
+    name TEXT,
+    active TEXT,
+    orderIndex INT
+)""")
+
+# add themes if not exists
+myCursor.execute("""
+    INSERT INTO blocks (name, active, orderIndex)
+        SELECT 'navbar', 'true', '0'
+    WHERE NOT EXISTS(SELECT 1 FROM blocks WHERE name = 'navbar');
+""")
+myCursor.execute("""
+    INSERT INTO blocks (name, active, orderIndex)
+    SELECT 'slider', 'true', '1'
+    WHERE NOT EXISTS(SELECT 1 FROM blocks WHERE name = 'slider');
+""")
+myCursor.execute("""
+    INSERT INTO blocks (name, active, orderIndex)
+    SELECT 'news', 'true', '2'
+    WHERE NOT EXISTS(SELECT 1 FROM blocks WHERE name = 'news');
+""")
+myCursor.execute("""
+    INSERT INTO blocks (name, active, orderIndex)
+    SELECT 'content', 'true', '3'
+    WHERE NOT EXISTS(SELECT 1 FROM blocks WHERE name = 'content');
+""")
+myCursor.execute("""
+    INSERT INTO blocks (name, active, orderIndex)
+    SELECT 'footer', 'true', '4'
+    WHERE NOT EXISTS(SELECT 1 FROM blocks WHERE name = 'footer');
 """)
 
 myConnection.commit()
@@ -171,7 +203,6 @@ def editUser():
 
 @app.route("/getPresets", methods = ['POST'])
 def getPresets():
-    print('getPresets')
     myCursor.execute(f'SELECT * FROM themes')
     themes = json.dumps(myCursor.fetchall())
     return themes
@@ -189,7 +220,25 @@ def savePreset():
     myConnection.commit()
     return 'success'
 
+@app.route("/getBlocks", methods = ['POST'])
+def getBlocks():
+    myCursor.execute(f'SELECT * FROM blocks')
+    blocks = json.dumps(myCursor.fetchall())
+    return blocks
+
+@app.route("/saveBlocks", methods = ['POST'])
+def saveBlocks():
+    blocks = request.json
+    i = 0
+    for block in blocks:
+        myCursor.execute(f"""
+                UPDATE blocks
+                SET active="{block['active']}", orderIndex="{i}"
+                WHERE LOWER(name)=LOWER("{block['name']}");
+            """)
+        i += 1
+    # myConnection.commit()
+    return 'success'
+
 if __name__ == "__main__":
     app.run(debug=True)
-
-
