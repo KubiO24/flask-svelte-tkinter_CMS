@@ -8,6 +8,7 @@ myConnection = sqlite3.connect('data.sqlite', check_same_thread=False)
 
 myCursor = myConnection.cursor()
 
+# userList table
 myCursor.execute("""CREATE TABLE IF NOT EXISTS userList (
     username TEXT,
     email TEXT,
@@ -22,6 +23,38 @@ myCursor.execute("""
     WHERE NOT EXISTS(SELECT 1 FROM userList WHERE username = 'admin');
 """)
 
+# themePresets table
+myCursor.execute("""CREATE TABLE IF NOT EXISTS themes (
+    preset TEXT,
+    mainColor TEXT,
+    secondColor TEXT,
+    mainBackground TEXT,
+    secondBackground TEXT,
+    newsBorder TEXT,
+    font TEXT
+)""")
+
+# add light preset if not exists
+myCursor.execute("""
+    INSERT INTO themes (preset, mainColor, secondColor, mainBackground, secondBackground, newsBorder, font)
+    SELECT 'light', '#000000', '#000000', '#ffffff', '#cccccc', '#444444', 'Arial'
+    WHERE NOT EXISTS(SELECT 1 FROM themes WHERE preset = 'light');
+""")
+
+# add dark preset if not exists
+myCursor.execute("""
+    INSERT INTO themes (preset, mainColor, secondColor, mainBackground, secondBackground, newsBorder, font)
+    SELECT 'dark', '#ffffff', '#ffffff', '#222222', '#333333', '#111111', 'Arial'
+    WHERE NOT EXISTS(SELECT 1 FROM themes WHERE preset = 'dark');
+""")
+
+# add custom preset if not exists
+myCursor.execute("""
+    INSERT INTO themes (preset, mainColor, secondColor, mainBackground, secondBackground, newsBorder, font)
+    SELECT 'custom', '#000000', '#000000', '#ffffff', '#ffffff', '#cccccc', 'Arial'
+    WHERE NOT EXISTS(SELECT 1 FROM themes WHERE preset = 'custom');
+""")
+
 myConnection.commit()
 
 
@@ -30,10 +63,9 @@ myConnection.commit()
 
 def userExist(username):
     print(username)
-    myCursor = myConnection.cursor()
     myCursor.execute(f'SELECT EXISTS(SELECT 1 FROM userList WHERE LOWER(username)=LOWER("{username}"))')
     row = myCursor.fetchall()
-    if(row[0][0] == 1):
+    if row[0][0] == 1:
         return True
     return False
 
@@ -72,7 +104,6 @@ def login():
     username = data["username"]
     password = data["password"]
 
-    myCursor = myConnection.cursor()
     myCursor.execute(f'SELECT EXISTS(SELECT 1 FROM userList WHERE LOWER(username)=LOWER("{username}") AND password="{password}")')
     row = myCursor.fetchall()
     if (row[0][0] == 1):
@@ -82,7 +113,6 @@ def login():
 @app.route("/getPermission", methods = ['POST'])
 def getPermission():
     username = request.data.decode("utf-8")
-    myCursor = myConnection.cursor()
     myCursor.execute(f'SELECT userType FROM userList WHERE LOWER(userName) = LOWER("{username}");')
     permission = myCursor.fetchall()[0][0]
     return str(permission)
@@ -90,7 +120,6 @@ def getPermission():
 @app.route("/getProperUsername", methods = ['POST'])
 def getProperUsername():
     username = request.data.decode("utf-8")
-    myCursor = myConnection.cursor()
     myCursor.execute(f'SELECT userName FROM userList WHERE LOWER(userName) = LOWER("{username}");')
     userName = myCursor.fetchall()[0][0]
     return str(userName)
@@ -99,7 +128,7 @@ def getProperUsername():
 def getUserList():
     permissionLevel = request.json['permissionLevel']
     username = request.json['username']
-    myCursor = myConnection.cursor()
+    print(username)
     if permissionLevel == '2':
         myCursor.execute(f'SELECT * FROM userList ORDER BY userType DESC, username ASC')
     else:
@@ -110,7 +139,6 @@ def getUserList():
 @app.route("/deleteUser", methods = ['POST'])
 def deleteUser():
     username = request.data.decode("utf-8")
-    myCursor = myConnection.cursor()
     myCursor.execute(f'DELETE FROM userList WHERE LOWER(username)=LOWER("{username}");')
     myConnection.commit()
     print(username)
@@ -129,10 +157,10 @@ def editUser():
         if userExist(username):
             return {'type': "error", 'message': "This username is already taken"}
 
+    print(permissionLevel)
     if permissionLevel != '0' and permissionLevel != '1' and permissionLevel != '2':
         return {'type': "error", 'message': "Wrong permission level"}
 
-    myCursor = myConnection.cursor()
     myCursor.execute(f"""
         UPDATE userList 
         SET username="{username}", email="{email}", password="{password}", userType="{permissionLevel}" 
@@ -140,6 +168,26 @@ def editUser():
     """)
     myConnection.commit()
     return {'type': "success", 'message': "msg"}
+
+@app.route("/getPresets", methods = ['POST'])
+def getPresets():
+    print('getPresets')
+    myCursor.execute(f'SELECT * FROM themes')
+    themes = json.dumps(myCursor.fetchall())
+    return themes
+
+@app.route("/savePreset", methods = ['POST'])
+def savePreset():
+    selectedPreset = request.json['selectedPreset']
+    preset = request.json['preset']
+    print(preset[0])
+    myCursor.execute(f"""
+            UPDATE themes 
+            SET mainColor="{preset[0]}", secondColor="{preset[1]}", mainBackground="{preset[2]}" , secondBackground="{preset[3]}", newsBorder="{preset[4]}", font="{preset[5]}"
+            WHERE LOWER(preset)=LOWER("{selectedPreset}");
+        """)
+    myConnection.commit()
+    return 'success'
 
 if __name__ == "__main__":
     app.run(debug=True)
