@@ -2,6 +2,7 @@
     import { onMount } from 'svelte';
 
     export let user;
+    export let mainPermissionLevel;
     let originalUsername = user[0];
     let originalEmail = user[1];
     let originalPassword = user[2];
@@ -29,7 +30,7 @@
         element_password.contentEditable = true;
         element_password.style.fontStyle = 'italic';
 
-        if(originalPermissionLevel == 2) {
+        if(mainPermissionLevel == 2) {
             element_permission.contentEditable = true;
             element_permission.style.fontStyle = 'italic';
         }
@@ -64,7 +65,7 @@
         element_secondButton.style.backgroundColor = "#ff5353";
         secondButton_action = Delete;
 
-        if(originalPermissionLevel != 2) {
+        if(mainPermissionLevel != 2) {
             element_permission.innerHTML = originalPermissionLevel;
         }
 
@@ -89,11 +90,15 @@
             element_email.innerHTML = originalEmail;
             element_password.innerHTML = originalPassword;
             element_permission.innerHTML = originalPermissionLevel;
-        }else {
+        }else if(result['type'] == 'success') {
+            if(localStorage.getItem("userLoginned") == originalUsername) {
+                localStorage.setItem("userLoginned", element_username.innerText);
+                document.getElementById('dataUsername').innerHTML = element_username.innerText;
+            }
             originalUsername = element_username.innerText;
             originalEmail = element_email.innerText;
             originalPassword = element_password.innerText;
-            originalPermissionLevel = element_permission.innerText;
+            originalPermissionLevel = element_permission.innerText;    
         }
     }
 
@@ -117,6 +122,11 @@
         element_secondButton.innerHTML = "Delete";
         element_secondButton.style.backgroundColor = "#ff5353";
         secondButton_action = Delete;
+
+        element_username.innerHTML = originalUsername;
+        element_email.innerHTML = originalEmail;
+        element_password.innerHTML = originalPassword;
+        element_permission.innerHTML = originalPermissionLevel;
     }
 
     async function Delete() {
@@ -156,11 +166,8 @@
         text-align: center;
         padding: 8px;
         margin: auto;
-    }
-    
-    td {
+        font-size: 1.2em;
         border-right: 1px solid #f8f8f8;
-        font-size: 12px;
     }
 
     .userList_td_button {
@@ -173,17 +180,21 @@
     td button {
         width: 50px;
         height: 28px;
+        margin: 10px 0;
         color: white !important;
         border: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
     
     tr:nth-child(even){
         background: #F8F8F8;
     }
-    
-    /* Responsive */
-    
-    @media (max-width: 1100px) {
+
+
+    /* Responsive */  
+    /* @media (max-width: 1100px) {
         td {
             padding: 20px .625em .625em .625em;
             height: 60px;
@@ -195,6 +206,11 @@
             font-size: 13px;
             text-overflow: ellipsis;
         }
+
+        .userList_td_button {
+            height: 60px;
+        }
+        
         tr {
             display: table-cell;
         }
@@ -215,5 +231,5 @@
             display: block;
             text-align: center;
         }
-    }
+    } */
 </style>

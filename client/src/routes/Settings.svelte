@@ -1,6 +1,6 @@
 <script>
   import Themes from "../components/settings/themes.svelte";
-  import BlockOrder from "../components/settings/blockOrder.svelte";
+  import Blocks from "../components/settings/blocks.svelte";
   import UserList from "../components/settings/userList.svelte";
 
   let username, permissionLevel, permission, selectedSetting, settingProps, menuHeight;
@@ -35,23 +35,19 @@
     document.location.href = "/#/Login";
   }
 
-  function preview() {
-    document.location.href = "/";
-  }
-
   function open(x) {
     switch (x) {
       case 'themes':
         selectedSetting = Themes;
         settingProps = {}
         break;
-      case 'blockOrder':
-        selectedSetting = BlockOrder;
+      case 'blocks':
+        selectedSetting = Blocks;
         settingProps = {}
         break;
       case 'userList':
         selectedSetting = UserList;
-        settingProps = {permissionLevel: permissionLevel}
+        settingProps = {permissionLevel: permissionLevel, username: username}
         break;
       default:
         console.log(`Failed to open: ${x}`);
@@ -63,22 +59,29 @@
 <div class="settingsBox">
   <div class="nav flex-row">
     <div class="data flex-row">
-      <div id="username">Username: <b>{username}</b></div>
+      <div id="username">Username: <b id="dataUsername">{username}</b></div>
       <div id="permission">Permission: <b>{permission}</b></div>
     </div>
 
     <div class="control flex-row">
-      <button on:click={preview}>Go to page</button>
-      <button on:click={logout}>Logout</button>
+      <a class="controlButton" href="/">Go to page</a>
+      <button class="controlButton" on:click={logout}>Logout</button>
     </div>
   </div>
 
   <div class="flex-row">
     <div class="menu" bind:clientHeight={menuHeight}>
       <div on:click={() => open("themes")}>Themes</div>
-      <div on:click={() => open("blockOrder")}>Block Order</div>
+      <div on:click={() => open("blocks")}>Blocks</div>
       <div>Slider</div>
-      <div on:click={() => open("userList")}>User List</div>
+      <div on:click={() => open("userList")}>
+        {#if permissionLevel == 2}
+            User List
+        {:else}
+            Account settings
+        {/if}
+        
+    </div>
     </div>
 
     <div class="settings" style="height: {menuHeight}px;">
@@ -91,7 +94,7 @@
   .settingsBox {
     width: 60%;
 
-    margin: auto;
+    margin: 10% auto;
     margin-top: 100px;
 
     box-shadow: 0 0 20px 4px rgba(0, 0, 0, 0.25);
@@ -112,7 +115,7 @@
 
   .data {
     width: 50%;
-    min-width: 200px;
+    min-width: 210px;
     justify-content: left;
   }
 
@@ -126,10 +129,21 @@
     justify-content: right;
   }
 
-  .control button {
-    padding: 5px 10px;
+  .controlButton {
     margin: 0px 10px;
+    padding: 5px 10px;
+    background-color: #f4f4f4;
+    color: #333;
     white-space: nowrap;
+    user-select: none;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .controlButton:hover {
+    background-color: rgb(235, 235, 235);
   }
 
   .flex-row {
@@ -140,11 +154,13 @@
 
   .menu {
     height: 100%;
+    min-height: 600px;
     
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: left;
+    /* justify-content: left; */
+    justify-content: space-evenly;
 
     background-color: #ebebeb;
     border-right: 2px solid #ff4b2b;
@@ -155,6 +171,7 @@
     cursor: pointer;
     white-space: nowrap;
     transition: all 0.2s ease-in-out;
+    font-weight: bold;
   }
 
   .menu div:hover {
@@ -171,7 +188,7 @@
     justify-content: center;
     align-items: center;
     
-    overflow-y: scroll;
+    overflow-y: auto;
     overflow-x: auto;
   }
 </style>

@@ -2,7 +2,7 @@
     import userListElement from "./userListElement.svelte";
 
     export let permissionLevel;
-    let username = localStorage.getItem("userLoginned");
+    export let username;
     let userList = [];
 
     getUserList();
@@ -36,7 +36,7 @@
     </thead>
     <tbody>
         {#each userList as user}
-            <svelte:component this={userListElement} user={user}/>
+            <svelte:component this={userListElement} user={user} mainPermissionLevel={permissionLevel}/>
         {/each}  
     <tbody>
 </table>
@@ -62,6 +62,7 @@
 .fl-table td, .fl-table th {
     text-align: center;
     padding: 8px;
+    font-size: 1.3em;
 }
 
 .fl-table td {
@@ -91,12 +92,13 @@
     background: #F8F8F8;
 }
 
-/* Responsive */
 
-@media (max-width: 1100px) {
+/* Responsive */
+/* @media (max-width: 1100px) {
     .fl-table {
         display: block;
     }
+
 
     .fl-table thead, .fl-table tbody, .fl-table thead th {
         display: block;
@@ -120,7 +122,7 @@
         overflow-x: hidden;
         overflow-y: auto;
         width: 120px;
-        font-size: 13px;
+        font-size: 1em;
         text-overflow: ellipsis;
     }
     .fl-table thead th {
@@ -147,5 +149,5 @@
         display: block;
         text-align: center;
     }
-}
+} */
 </style>
