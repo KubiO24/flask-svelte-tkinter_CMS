@@ -5,6 +5,7 @@
   import Login from "./routes/Login.svelte";
   import Register from "./routes/Register.svelte";
   import Settings from "./routes/Settings.svelte";
+  import News from "./routes/News.svelte";
 </script>
 
 <main>
@@ -14,6 +15,7 @@
       "/login": Login,
       "/register": Register,
       "/settings": Settings,
+      "/news": News,
     }}
   />
 </main>

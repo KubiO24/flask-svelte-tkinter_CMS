@@ -64,8 +64,11 @@
     }
   }
 
-  function getData() {
+  async function getData() {
     console.log("getdata");
+    const res = await fetch("./getData", {
+      method: "POST",
+    });
   }
 </script>
 

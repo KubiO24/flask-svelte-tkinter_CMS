@@ -98,10 +98,6 @@
     return res;
   }
   let data = getData();
-
-  function load() {
-    console.log(data);
-  }
 </script>
 
 {#await data}
@@ -110,7 +106,6 @@
   <div
     class="main-page-container"
     style="background-color: {bgColor};color:{color};"
-    on:load={load}
   >
     {#each data.blocks as item}
       {#if item.type === "navbar"}
