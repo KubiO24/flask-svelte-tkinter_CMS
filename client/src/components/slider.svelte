@@ -16,8 +16,6 @@
             autoplay={true}
             autoplayDuration={delay}
             duration={800}
-            autoplayProgressVisible={true}
-            pauseOnFocus={true}
         >
             <div
                 slot="prev"
