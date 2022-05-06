@@ -373,8 +373,8 @@ def getData():
             "mainColor": theme[1],
             "secondColor": theme[2],
             "mainBackground": theme[3],
-            "newsBorder": theme[4],
-            "secondBackground": theme[5],
+            "newsBorder": theme[5],
+            "secondBackground": theme[4],
             "font": "Roboto"
         },
         "blocks": resBlocks
