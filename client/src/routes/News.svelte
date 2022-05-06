@@ -45,9 +45,6 @@
         return res;
     }
     let data = getData();
-    function load() {
-        console.log(data);
-    }
 </script>
 
 {#await data}
@@ -66,13 +63,7 @@
             isLogged={logged}
         />
         <div style="padding: 60px;" />
-        <div
-            on:click={() => {
-                load();
-            }}
-        >
-            tak
-        </div>
+        {#each data.news as item}{/each}
         <Footer copyrights={data.blocks[data.blocks.length - 1].footerText} />
     </div>
 {/await}
