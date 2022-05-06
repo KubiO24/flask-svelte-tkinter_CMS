@@ -178,55 +178,61 @@
   class="main-page-container"
   style="background-color: {bgColor};color:{color};"
 >
-  <Header
-    navbarType={data.blocks[0].navbarType}
-    navbarItems={data.blocks[0].navbarItems}
-    background={data.theme.secondBackground}
-    color={data.theme.secondColor}
-  />
-  <div
-    style="padding: 60px
-  ;"
-  />
-  {#if showSlider}
-    <Slider data={data.blocks[1]} />
-  {/if}
+  {#each data.blocks as item}
+    {#if item.type === "navbar"}
+      <Header
+        navbarType={item.navbarType}
+        navbarItems={item.navbarItems}
+        background={data.theme.secondBackground}
+        color={data.theme.secondColor}
+      />
+      <div
+        style="padding: 60px
+;"
+      />
+    {/if}
 
-  {#if showNews}
-    <div class="newsContainer">
-      {#each data.blocks[2].newsItems as item, i}
-        <NewsContainer
-          category={item.newsCategory}
-          border={data.theme.newsBorder}
-          title={item.newsTitle}
-          content={item.newsText}
-          img={item.newsPhoto}
-        />
-      {/each}
-    </div>
-  {/if}
+    {#if item.type === "slider"}
+      <Slider data={item} />
+    {/if}
 
-  {#if someSec}
-    <div class="some-sec-container">
-      <div class="someSec">
-        <div class="left">
-          <div>
-            <h2>First featurette heading.</h2>
-            <h3>It will blow your mind</h3>
+    {#if item.type === "news"}
+      <div class="newsContainer">
+        {#each item.newsItems as news, i}
+          <NewsContainer
+            category={news.newsCategory}
+            border={data.theme.newsBorder}
+            title={news.newsTitle}
+            content={news.newsText}
+            img={news.newsPhoto}
+          />
+        {/each}
+      </div>
+    {/if}
+
+    {#if item.type === "someSec"}
+      <div class="some-sec-container">
+        <div class="someSec">
+          <div class="left">
+            <div>
+              <h2>First featurette heading.</h2>
+              <h3>It will blow your mind</h3>
+            </div>
+            <div>
+              Some great placeholder content for the first featurette here.
+              Imagine some exciting prose here.
+            </div>
           </div>
-          <div>
-            Some great placeholder content for the first featurette here.
-            Imagine some exciting prose here.
+          <div class="right">
+            <div>500 x 500</div>
           </div>
-        </div>
-        <div class="right">
-          <div>500 x 500</div>
         </div>
       </div>
-    </div>
-  {/if}
-
-  <Footer />
+    {/if}
+    {#if item.type === "footer"}
+      <Footer copyrights={item.footerText} />
+    {/if}
+  {/each}
 </div>
 
 <style>

@@ -1,12 +1,13 @@
+<script>
+    export let copyrights;
+</script>
+
 <footer>
     <div class="contatiner">
         <div class="links">
-            <a href="">Features</a>
-            <a href="">Pricing</a>
-            <a href="">FAQs</a>
-            <a href="">About</a>
+            <p>======links======</p>
         </div>
-        <div class="copyrights">©2022 Czarny Banan</div>
+        <div class="copyrights">©{copyrights}</div>
     </div>
 </footer>
 
