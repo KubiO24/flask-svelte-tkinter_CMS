@@ -96,7 +96,8 @@ myConnection.commit()
 
 def userExist(username):
     print(username)
-    myCursor.execute(f'SELECT EXISTS(SELECT 1 FROM userList WHERE LOWER(username)=LOWER("{username}"))')
+    myCursor.execute(
+        f'SELECT EXISTS(SELECT 1 FROM userList WHERE LOWER(username)=LOWER("{username}"))')
     row = myCursor.fetchall()
     if row[0][0] == 1:
         return True
@@ -110,11 +111,13 @@ def userExist(username):
 def base():
     return send_from_directory('client/public', 'index.html')
 
+
 @app.route("/<path:path>")
 def home(path):
     return send_from_directory('client/public', path)
 
-@app.route("/register", methods = ['POST'])
+
+@app.route("/register", methods=['POST'])
 def register():
     data = request.json
     username = data["username"]
@@ -131,53 +134,65 @@ def register():
     myConnection.commit()
     return '1'
 
-@app.route("/login", methods = ['POST'])
+
+@app.route("/login", methods=['POST'])
 def login():
     data = request.json
     username = data["username"]
     password = data["password"]
 
-    myCursor.execute(f'SELECT EXISTS(SELECT 1 FROM userList WHERE LOWER(username)=LOWER("{username}") AND password="{password}")')
+    myCursor.execute(
+        f'SELECT EXISTS(SELECT 1 FROM userList WHERE LOWER(username)=LOWER("{username}") AND password="{password}")')
     row = myCursor.fetchall()
     if (row[0][0] == 1):
         return '1'
     return '0'
 
-@app.route("/getPermission", methods = ['POST'])
+
+@app.route("/getPermission", methods=['POST'])
 def getPermission():
     username = request.data.decode("utf-8")
-    myCursor.execute(f'SELECT userType FROM userList WHERE LOWER(userName) = LOWER("{username}");')
+    myCursor.execute(
+        f'SELECT userType FROM userList WHERE LOWER(userName) = LOWER("{username}");')
     permission = myCursor.fetchall()[0][0]
     return str(permission)
 
-@app.route("/getProperUsername", methods = ['POST'])
+
+@app.route("/getProperUsername", methods=['POST'])
 def getProperUsername():
     username = request.data.decode("utf-8")
-    myCursor.execute(f'SELECT userName FROM userList WHERE LOWER(userName) = LOWER("{username}");')
+    myCursor.execute(
+        f'SELECT userName FROM userList WHERE LOWER(userName) = LOWER("{username}");')
     userName = myCursor.fetchall()[0][0]
     return str(userName)
 
-@app.route("/getUserList", methods = ['POST'])
+
+@app.route("/getUserList", methods=['POST'])
 def getUserList():
     permissionLevel = request.json['permissionLevel']
     username = request.json['username']
     print(username)
     if permissionLevel == '2':
-        myCursor.execute(f'SELECT * FROM userList ORDER BY userType DESC, username ASC')
+        myCursor.execute(
+            f'SELECT * FROM userList ORDER BY userType DESC, username ASC')
     else:
-        myCursor.execute(f'SELECT * FROM userList WHERE LOWER(username)=LOWER("{username}")')
+        myCursor.execute(
+            f'SELECT * FROM userList WHERE LOWER(username)=LOWER("{username}")')
     userList = json.dumps(myCursor.fetchall())
     return userList
 
-@app.route("/deleteUser", methods = ['POST'])
+
+@app.route("/deleteUser", methods=['POST'])
 def deleteUser():
     username = request.data.decode("utf-8")
-    myCursor.execute(f'DELETE FROM userList WHERE LOWER(username)=LOWER("{username}");')
+    myCursor.execute(
+        f'DELETE FROM userList WHERE LOWER(username)=LOWER("{username}");')
     myConnection.commit()
     print(username)
     return "success"
 
-@app.route("/editUser", methods = ['POST'])
+
+@app.route("/editUser", methods=['POST'])
 def editUser():
     print('editUser')
     originalUsername = request.json['originalUsername']
@@ -202,13 +217,15 @@ def editUser():
     myConnection.commit()
     return {'type': "success", 'message': "msg"}
 
-@app.route("/getPresets", methods = ['POST'])
+
+@app.route("/getPresets", methods=['POST'])
 def getPresets():
     myCursor.execute(f'SELECT * FROM themes')
     themes = json.dumps(myCursor.fetchall())
     return themes
 
-@app.route("/savePreset", methods = ['POST'])
+
+@app.route("/savePreset", methods=['POST'])
 def savePreset():
     myCursor.execute(f"""
                 UPDATE themes 
@@ -226,13 +243,15 @@ def savePreset():
     myConnection.commit()
     return 'success'
 
-@app.route("/getBlocks", methods = ['POST'])
+
+@app.route("/getBlocks", methods=['POST'])
 def getBlocks():
     myCursor.execute(f'SELECT * FROM blocks')
     blocks = json.dumps(myCursor.fetchall())
     return blocks
 
-@app.route("/saveBlocks", methods = ['POST'])
+
+@app.route("/saveBlocks", methods=['POST'])
 def saveBlocks():
     blocks = request.json
     i = 0
@@ -245,6 +264,14 @@ def saveBlocks():
         i += 1
     # myConnection.commit()
     return 'success'
+
+
+@app.route("/getData", methods=['POST'])
+def getData():
+    myCursor.execute(f'SELECT * FROM blocks')
+    blocks = json.dumps(myCursor.fetchall())
+    return blocks
+
 
 if __name__ == "__main__":
     app.run(debug=True)
