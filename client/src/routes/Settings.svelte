@@ -2,6 +2,7 @@
   import Themes from "../components/settings/themes.svelte";
   import Blocks from "../components/settings/blocks.svelte";
   import UserList from "../components/settings/userList.svelte";
+  import News from "../components/settings/news.svelte";
 
   let username, permissionLevel, permission, selectedSetting, settingProps, menuHeight;
   selectedSetting = Themes;
@@ -49,6 +50,10 @@
         selectedSetting = UserList;
         settingProps = {permissionLevel: permissionLevel, username: username}
         break;
+    case 'news':
+        selectedSetting = News;
+        settingProps = {}
+        break;
       default:
         console.log(`Failed to open: ${x}`);
 }
@@ -74,6 +79,7 @@
       <div on:click={() => open("themes")}>Themes</div>
       <div on:click={() => open("blocks")}>Blocks</div>
       <div>Slider</div>
+      <div on:click={() => open("news")}>News</div>
       <div on:click={() => open("userList")}>
         {#if permissionLevel == 2}
             User List

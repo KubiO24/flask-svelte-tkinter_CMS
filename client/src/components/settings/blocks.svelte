@@ -61,15 +61,28 @@
     }
 </script>
 
-<SortableList 
-    {list} 
-    on:sort={sortList}
-    let:item
-    let:index
->
-    <ListElement {item} {index} {changeActive}/>
-</SortableList>
+<div id="blocksMain">
+    <SortableList 
+        {list} 
+        on:sort={sortList}
+        let:item
+        let:index
+    >
+        <ListElement {item} {index} {changeActive}/>
+    </SortableList>
+
+    <h6>Drag and drop to change order</h6>
+</div>
+
 
 <style>
-
+    #blocksMain {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    h6 {
+        margin-top: -20px;
+        opacity: 0.25;
+    }
 </style>
