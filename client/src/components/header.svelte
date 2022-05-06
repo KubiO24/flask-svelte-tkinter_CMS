@@ -3,6 +3,7 @@
     export let navbarItems;
     export let background;
     export let color;
+    export let isLogged;
 
     let active = false;
 
@@ -17,6 +18,11 @@
             document.getElementById("darkBg").classList.add("hideBg");
         }
     };
+
+    function logout() {
+        localStorage.setItem("userLoginned", null);
+        window.location.reload(true);
+    }
 </script>
 
 <header style="background-color: {background};">
@@ -31,10 +37,18 @@
                 {/each}
             </div>
         </nav>
-        <div class="links nav-container">
-            <a href="/#/Login" class="linkLogin">Login</a>
-            <a href="/#/Register" class="linkRegister">Register</a>
-        </div>
+
+        {#if isLogged}
+            <div class="links nav-container">
+                <a href="/#/Settings" class="linkLogin">Settings</a>
+                <a href="/#/" on:click={logout} class="linkRegister">Log Out</a>
+            </div>
+        {:else}
+            <div class="links nav-container">
+                <a href="/#/Login" class="linkLogin">Login</a>
+                <a href="/#/Register" class="linkRegister">Register</a>
+            </div>
+        {/if}
     {:else}
         <div
             class="nav-container"
@@ -70,11 +84,19 @@
                     >{item.navbarText}</a
                 >
             {/each}
-
-            <div class="side-links">
-                <a href="/#/Login" class="linkLogin">Login</a>
-                <a href="/#/Register" class="linkRegister">Register</a>
-            </div>
+            {#if isLogged}
+                <div class="side-links">
+                    <a href="/#/Settings" class="linkLogin">Settings</a>
+                    <a href="/#/" on:click={logout} class="linkRegister"
+                        >Log Out</a
+                    >
+                </div>
+            {:else}
+                <div class="side-links">
+                    <a href="/#/Login" class="linkLogin">Login</a>
+                    <a href="/#/Register" class="linkRegister">Register</a>
+                </div>
+            {/if}
         </nav>
     </div>
 {/if}

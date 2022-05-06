@@ -84,10 +84,9 @@
   import NewsContainer from "../components/NewsContainer.svelte";
   import Footer from "../components/footer.svelte";
   import Slider from "../components/slider.svelte";
-
-  let showSlider = true;
-  let showNews = true;
-  let someSec = false;
+  let logged = false;
+  let username = localStorage.getItem("userLoginned");
+  if ((username === null || username === "null") === false) logged = true;
 
   const data = {
     theme: {
@@ -185,6 +184,8 @@
         navbarItems={item.navbarItems}
         background={data.theme.secondBackground}
         color={data.theme.secondColor}
+        color2={data.theme.mainColor}
+        isLogged={logged}
       />
       <div
         style="padding: 60px
