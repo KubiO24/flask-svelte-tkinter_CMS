@@ -270,7 +270,9 @@ def saveBlocks():
 def getData():
     myCursor.execute(f'SELECT * FROM blocks')
     blocks = json.dumps(myCursor.fetchall())
-    return blocks
+    myCursor.execute(f'SELECT * FROM themes')
+    themes = json.dumps(myCursor.fetchall())
+    print()
 
 
 if __name__ == "__main__":

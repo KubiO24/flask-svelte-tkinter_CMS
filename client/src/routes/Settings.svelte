@@ -4,7 +4,12 @@
   import UserList from "../components/settings/userList.svelte";
   import News from "../components/settings/news.svelte";
 
-  let username, permissionLevel, permission, selectedSetting, settingProps, menuHeight;
+  let username,
+    permissionLevel,
+    permission,
+    selectedSetting,
+    settingProps,
+    menuHeight;
   selectedSetting = Themes;
 
   username = localStorage.getItem("userLoginned");
@@ -38,26 +43,29 @@
 
   function open(x) {
     switch (x) {
-      case 'themes':
+      case "themes":
         selectedSetting = Themes;
-        settingProps = {}
+        settingProps = {};
         break;
-      case 'blocks':
+      case "blocks":
         selectedSetting = Blocks;
-        settingProps = {}
+        settingProps = {};
         break;
-      case 'userList':
+      case "userList":
         selectedSetting = UserList;
-        settingProps = {permissionLevel: permissionLevel, username: username}
+        settingProps = { permissionLevel: permissionLevel, username: username };
         break;
-    case 'news':
+      case "news":
         selectedSetting = News;
-        settingProps = {}
+        settingProps = {};
         break;
       default:
         console.log(`Failed to open: ${x}`);
-}
+    }
+  }
 
+  function getData() {
+    console.log("getdata");
   }
 </script>
 
@@ -82,25 +90,43 @@
       <div on:click={() => open("news")}>News</div>
       <div on:click={() => open("userList")}>
         {#if permissionLevel == 2}
-            User List
+          User List
         {:else}
-            Account settings
+          Account settings
         {/if}
-        
-    </div>
+      </div>
     </div>
 
     <div class="settings" style="height: {menuHeight}px;">
-      <svelte:component this={selectedSetting} {...settingProps}/>
+      <svelte:component this={selectedSetting} {...settingProps} />
     </div>
   </div>
 </div>
+<div class="saveSettings">
+  <button on:click={getData}>Save Settings</button>
+</div>
 
 <style>
+  .saveSettings {
+    width: 100%;
+    margin: 30px 0;
+    display: flex;
+    justify-content: center;
+  }
+  .saveSettings > button {
+    padding: 10px 40px;
+    color: white;
+    background-color: #ff4b2b;
+    border: 1px solid #ff4b2b;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: transform 80ms ease-in;
+    margin-top: 10px;
+  }
   .settingsBox {
     width: 60%;
 
-    margin: 10% auto;
+    margin: auto;
     margin-top: 100px;
 
     box-shadow: 0 0 20px 4px rgba(0, 0, 0, 0.25);
@@ -161,7 +187,7 @@
   .menu {
     height: 100%;
     min-height: 600px;
-    
+
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -193,7 +219,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    
+
     overflow-y: auto;
     overflow-x: auto;
   }
