@@ -32,23 +32,24 @@ myCursor.execute("""CREATE TABLE IF NOT EXISTS themes (
     mainBackground TEXT,
     secondBackground TEXT,
     newsBorder TEXT,
-    font TEXT
+    font TEXT,
+    selected INT
 )""")
 
 # add presets if not exists
 myCursor.execute("""
-    INSERT INTO themes (preset, mainColor, secondColor, mainBackground, secondBackground, newsBorder, font)
-    SELECT 'light', '#000000', '#000000', '#ffffff', '#cccccc', '#444444', 'Arial'
+    INSERT INTO themes (preset, mainColor, secondColor, mainBackground, secondBackground, newsBorder, font, selected)
+    SELECT 'light', '#000000', '#000000', '#ffffff', '#cccccc', '#444444', 'Arial', 1
     WHERE NOT EXISTS(SELECT 1 FROM themes WHERE preset = 'light');
 """)
 myCursor.execute("""
-    INSERT INTO themes (preset, mainColor, secondColor, mainBackground, secondBackground, newsBorder, font)
-    SELECT 'dark', '#ffffff', '#ffffff', '#222222', '#333333', '#111111', 'Arial'
+    INSERT INTO themes (preset, mainColor, secondColor, mainBackground, secondBackground, newsBorder, font, selected)
+    SELECT 'dark', '#ffffff', '#ffffff', '#222222', '#333333', '#111111', 'Arial', 0
     WHERE NOT EXISTS(SELECT 1 FROM themes WHERE preset = 'dark');
 """)
 myCursor.execute("""
-    INSERT INTO themes (preset, mainColor, secondColor, mainBackground, secondBackground, newsBorder, font)
-    SELECT 'custom', '#000000', '#000000', '#ffffff', '#ffffff', '#cccccc', 'Arial'
+    INSERT INTO themes (preset, mainColor, secondColor, mainBackground, secondBackground, newsBorder, font, selected)
+    SELECT 'custom', '#000000', '#000000', '#ffffff', '#ffffff', '#cccccc', 'Arial', 0
     WHERE NOT EXISTS(SELECT 1 FROM themes WHERE preset = 'custom');
 """)
 
@@ -209,12 +210,17 @@ def getPresets():
 
 @app.route("/savePreset", methods = ['POST'])
 def savePreset():
+    myCursor.execute(f"""
+                UPDATE themes 
+                SET selected=0
+                WHERE selected=1;
+            """)
+    myConnection.commit()
     selectedPreset = request.json['selectedPreset']
     preset = request.json['preset']
-    print(preset[0])
     myCursor.execute(f"""
             UPDATE themes 
-            SET mainColor="{preset[0]}", secondColor="{preset[1]}", mainBackground="{preset[2]}" , secondBackground="{preset[3]}", newsBorder="{preset[4]}", font="{preset[5]}"
+            SET mainColor="{preset[0]}", secondColor="{preset[1]}", mainBackground="{preset[2]}" , secondBackground="{preset[3]}", newsBorder="{preset[4]}", font="{preset[5]}", selected=1
             WHERE LOWER(preset)=LOWER("{selectedPreset}");
         """)
     myConnection.commit()

@@ -15,17 +15,20 @@
         let data = await res.json()
         for(const preset of data) { 
             if(preset[0] == 'dark') {
+                if(preset[7] == 1) selectedPreset = preset[0]
                 preset.shift();
-                presets.dark = preset;
+                presets.dark = preset;      
             }else if(preset[0] == 'light') {
+                if(preset[7] == 1) selectedPreset = preset[0]
                 preset.shift();
                 presets.light = preset;
             }else if(preset[0] == 'custom') {
+                if(preset[7] == 1) selectedPreset = preset[0]
                 preset.shift();
                 presets.custom = preset;
             }else {
                 console.log("Error while loading presets");
-            }       
+            }     
         }
 
         refreshSelected();
@@ -99,7 +102,7 @@
                 <option value="dark">Dark</option>
                 <option value="custom">Custom</option>
             </select>
-            <button on:click={resetPreset}>Reset to default</button>
+            <button on:click={resetPreset}>Reset Preset</button>
         </div>
         
     </div>
