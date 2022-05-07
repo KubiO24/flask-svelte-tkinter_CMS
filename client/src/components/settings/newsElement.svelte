@@ -17,7 +17,6 @@
         category = news[2]
         if(news[3] != '') {
             imagesBase64Array = news[3].split('.');      
-            console.log(imagesBase64Array.length)
         }
         saveOrAdd = "Save";
         originalTitle = title;
@@ -50,7 +49,7 @@
             });
             let result = await res.json();
             if (result.type != "success") {
-                console.log(result.message);
+                alert(result.message);
                 return;
             }
             newsList = [...newsList, [title, description, category, imagesString]];
@@ -74,7 +73,7 @@
                 headers: {"content-type": "application/json"}
             });
             let result = await res.json();
-            if (result.type != "success") console.log(result.message);
+            if (result.type != "success") alert(result.message);
         }    
     }
 
@@ -122,7 +121,7 @@
 </script>
 
 <div bind:this={thisNews} class="news">
-    <form class="newsContent" on:submit={save} >
+    <form class="newsContent" on:submit={save} method="post" >
         <div class="newsContent2">
             <div class="newsValues">
                 <input bind:value={title} type="text" name="title" placeholder="News Title" required>

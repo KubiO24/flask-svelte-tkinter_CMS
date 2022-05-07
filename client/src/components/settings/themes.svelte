@@ -52,7 +52,17 @@
         })
 
         const result = await res.text()
-        if(result != 'success') console.log("Error while saving preset")
+        if(result != 'success') {
+            console.log("Error while saving preset")
+            return;
+        }
+
+        presets[selectedPreset][0] = selectedMainColor;
+        presets[selectedPreset][1] = selectedSecondColor;
+        presets[selectedPreset][2] = selectedMainBackground;
+        presets[selectedPreset][3] = selectedSecondBackground;
+        presets[selectedPreset][4] = selectedNewsBorder;
+        presets[selectedPreset][5] = selectedFontFamily;
     }
 
     function resetPreset() {

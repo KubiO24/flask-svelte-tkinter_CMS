@@ -1,8 +1,11 @@
 <script>
-  import Themes from "../components/settings/themes.svelte";
-  import Blocks from "../components/settings/blocks.svelte";
-  import UserList from "../components/settings/userList.svelte";
-  import News from "../components/settings/news.svelte";
+    import Themes from "../components/settings/themes.svelte";
+    import Blocks from "../components/settings/blocks.svelte";
+    import Menu from "../components/settings/menu.svelte"
+    import Slider from "../components/settings/slider.svelte"
+    import News from "../components/settings/news.svelte";
+    import Footer from "../components/settings/footer.svelte";
+    import UserList from "../components/settings/userList.svelte";
 
   let username,
     permissionLevel,
@@ -43,24 +46,36 @@
 
   function open(x) {
     switch (x) {
-      case "themes":
-        selectedSetting = Themes;
-        settingProps = {};
-        break;
-      case "blocks":
-        selectedSetting = Blocks;
-        settingProps = {};
-        break;
-      case "userList":
-        selectedSetting = UserList;
-        settingProps = { permissionLevel: permissionLevel, username: username };
-        break;
-      case "news":
-        selectedSetting = News;
-        settingProps = {};
-        break;
-      default:
-        console.log(`Failed to open: ${x}`);
+        case "themes":
+            selectedSetting = Themes;
+            settingProps = {};
+            break;
+        case "blocks":
+            selectedSetting = Blocks;
+            settingProps = {};
+            break;
+        case "menu":
+            selectedSetting = Menu;
+            settingProps = {};
+            break;   
+        case "slider":
+            selectedSetting = Slider;
+            settingProps = {};
+            break;
+        case "news":
+            selectedSetting = News;
+            settingProps = {};
+            break;
+        case "footer":
+            selectedSetting = Footer;
+            settingProps = {};
+            break;
+        case "userList":
+            selectedSetting = UserList;
+            settingProps = { permissionLevel: permissionLevel, username: username };
+            break;
+        default:
+            console.log(`Failed to open: ${x}`);
     }
   }
 
@@ -89,8 +104,10 @@
     <div class="menu" bind:clientHeight={menuHeight}>
       <div on:click={() => open("themes")}>Themes</div>
       <div on:click={() => open("blocks")}>Blocks</div>
-      <div>Slider</div>
+      <div on:click={() => open("menu")}>Menu</div>
+      <div on:click={() => open("slider")}>Slider</div>
       <div on:click={() => open("news")}>News</div>
+      <div on:click={() => open("footer")}>Footer</div>
       <div on:click={() => open("userList")}>
         {#if permissionLevel == 2}
           User List
@@ -207,4 +224,10 @@
     overflow-y: auto;
     overflow-x: auto;
   }
+
+@media (max-width: 500px) {
+    .settingsBox {
+        width: 100%;
+    }
+}
 </style>

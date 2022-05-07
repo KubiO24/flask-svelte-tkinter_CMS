@@ -20,7 +20,7 @@ myCursor.execute("""CREATE TABLE IF NOT EXISTS userList (
 # add admin if not exists
 myCursor.execute("""
     INSERT INTO userList (username, email, password, userType)
-    SELECT 'admin', 'admin', 'admin', 2
+    SELECT 'Admin', 'admin', 'admin', 2
     WHERE NOT EXISTS(SELECT 1 FROM userList WHERE username = 'admin');
 """)
 
@@ -90,12 +90,20 @@ myCursor.execute("""
 """)
 
 
-# themes table
+# news table
 myCursor.execute("""CREATE TABLE IF NOT EXISTS news (
     title TEXT,
     description TEXT,
     category TEXT,
     images TEXT
+)""")
+
+
+# menu table
+myCursor.execute("""CREATE TABLE IF NOT EXISTS menu (
+    text TEXT,
+    link TEXT,
+    id INTEGER PRIMARY KEY AUTOINCREMENT
 )""")
 
 myConnection.commit()
@@ -305,6 +313,8 @@ def saveNews():
 @app.route("/updateNews", methods=['POST'])
 def updateNews():
     news = request.json
+    if news['title'].lower() == 'title':
+        return {"type": "error", "message": "c'mon can't you think about a better title?"}
     if newsTitleExist(news['title']) and news['originalTitle'].lower() != news['title'].lower():
         return {"type": "error", "message": "News title already exists"}
     myCursor.execute(f"""
@@ -320,6 +330,44 @@ def deleteNews():
     title = request.data.decode("utf-8")
     myCursor.execute(
         f'DELETE FROM news WHERE LOWER(title)=LOWER("{title}");')
+    myConnection.commit()
+    return {"type": "success"}
+
+@app.route("/getMenu", methods=['POST'])
+def getMenu():
+    myCursor.execute(f'SELECT * FROM menu')
+    menu = json.dumps(myCursor.fetchall())
+    return menu
+
+@app.route("/saveMenu", methods=['POST'])
+def saveMenu():
+    text = request.json['text']
+    link = request.json['link']
+    myCursor.execute(f"""
+        INSERT INTO menu (text, link)
+        VALUES ('{text}','{link}')
+    """)
+    myConnection.commit()
+    myCursor.execute("select seq from sqlite_sequence WHERE name = 'menu'")
+    lastId = myCursor.fetchall()
+    return {"type": "success", 'message': lastId[0][0]}
+
+@app.route("/updateMenu", methods=['POST'])
+def updateMenu():
+    menu = request.json
+    myCursor.execute(f"""
+        UPDATE menu 
+        SET text="{menu['text']}", link="{menu['link']}"
+        WHERE id={menu['id']};
+    """)
+    myConnection.commit()
+    return {"type": "success"}
+
+@app.route("/deleteMenu", methods=['POST'])
+def deleteMenu():
+    id = request.data.decode("utf-8")
+    myCursor.execute(
+        f'DELETE FROM menu WHERE id={id};')
     myConnection.commit()
     return {"type": "success"}
 
