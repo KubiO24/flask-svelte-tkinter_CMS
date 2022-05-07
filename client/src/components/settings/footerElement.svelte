@@ -1,24 +1,24 @@
 <script>
-    export let menu;
-    export let menuList;
-    let text, link, id, addOrSave, toSave, thisMenu;
+    export let footer;
+    export let footerList;
+    let text, link, id, addOrSave, toSave, thisFooter;
 
     toSave = false;
 
-    text = menu[0]
-    link = menu[1]
+    text = footer[0]
+    link = footer[1]
 
     addOrSave = "Save";
-    if(menu.length == 2) {
+    if(footer.length == 2) {
         addOrSave = 'Add';
     }else {
-        id = menu[2];
+        id = footer[2];
     }
     
     async function save() {
         if(toSave == false) return;
         if(addOrSave == "Add") {
-            const res = await fetch("./saveMenu", {
+            const res = await fetch("./saveFooter", {
                 method: "POST",
                 body: JSON.stringify({
                     text: text,
@@ -33,12 +33,12 @@
                 return;
             }
             
-            menuList = [...menuList, [text, link, result.message]]
+            footerList = [...footerList, [text, link, result.message]]
             text = "";
             link = "";
             toSave = false;
         }else {
-            const res = await fetch("./updateMenu", {
+            const res = await fetch("./updateFooter", {
                 method: "POST",
                 body: JSON.stringify({
                     text: text,
@@ -58,8 +58,8 @@
         }    
     }
 
-    async function deleteMenu() {
-        const res = await fetch("./deleteMenu", {
+    async function deleteFooter() {
+        const res = await fetch("./deleteFooter", {
             method: "POST",
             body: id,
             headers: {"content-type": "application/json"}
@@ -70,7 +70,7 @@
             alert(result.message);
             return;
         }   
-        thisMenu.style.display = 'none';
+        thisFooter.style.display = 'none';
     }
 
     function changed() {
@@ -82,12 +82,12 @@
     }
 </script>
 
-<div bind:this={thisMenu}> 
+<div bind:this={thisFooter}> 
     <input bind:value={text} on:input={changed} type="text" name="text" placeholder="Item text" required>
     <input bind:value={link} on:input={changed} type="text" name="link" placeholder="Link url" required> 
     <button on:click={save} style='{toSave==true ? "color: white; background-color: #ff4b2b; border-color: #ff4b2b;" : ""} {addOrSave=="Add" ? "width: 110px;" : undefined}' disabled={!toSave}>{addOrSave}</button>
     {#if addOrSave == "Save"}
-        <button on:click={deleteMenu} style='color: white; background-color: #262626; border-color: #262626; width: 60px;'>Delete</button>
+        <button on:click={deleteFooter} style='color: white; background-color: #262626; border-color: #262626; width: 60px;'>Delete</button>
     {/if} 
 </div>
 

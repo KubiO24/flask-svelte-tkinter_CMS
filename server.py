@@ -21,7 +21,7 @@ myCursor.execute("""CREATE TABLE IF NOT EXISTS userList (
 myCursor.execute("""
     INSERT INTO userList (username, email, password, userType)
     SELECT 'Admin', 'admin', 'admin', 2
-    WHERE NOT EXISTS(SELECT 1 FROM userList WHERE username = 'admin');
+    WHERE NOT EXISTS(SELECT 1 FROM userList WHERE LOWER(username) = 'admin');
 """)
 
 

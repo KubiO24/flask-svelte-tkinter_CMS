@@ -85,7 +85,7 @@
 
         let result = await res.json()
         if (result.type != "success") return;
-        thisNews.remove();
+        thisNews.style.display = 'none';
     }
 
     async function loadedImage() {

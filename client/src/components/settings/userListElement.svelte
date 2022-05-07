@@ -143,7 +143,7 @@
         const result = await res.text()
         if(result != "success") alert("Error while deleting user")
 
-        document.getElementById(`userList_row_${originalUsername}`).remove();
+        document.getElementById(`userList_row_${originalUsername}`).style.display = 'none';
     }
 
 
