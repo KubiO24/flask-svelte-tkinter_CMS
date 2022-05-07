@@ -90,11 +90,13 @@
   let bgColor;
   let color;
   async function getData() {
-    let URL = "./data.json";
-    let res = await fetch(URL);
+    let res = await fetch("./getData", {
+      method: "POST",
+    });
     res = await res.json();
     bgColor = res.theme.mainBackground;
     color = res.theme.mainColor;
+    console.log(res);
     return res;
   }
   let data = getData();
@@ -141,7 +143,7 @@
         </div>
       {/if}
 
-      {#if item.type === "someSec"}
+      {#if item.type === "content"}
         <div class="some-sec-container">
           <div class="someSec">
             <div class="left">
