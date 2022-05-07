@@ -1,9 +1,11 @@
 <script>
     import MenuElement from "./menuElement.svelte";
     
-    let menuList = [];   
+    let menuType, checkbox, menuList = [];   
+    menuType = '0';
 
     loadMenu();
+    getMenuType();
 
     async function loadMenu() {
         const res = await fetch('./getMenu', {
@@ -12,13 +14,54 @@
 
         menuList = await res.json()    
     }
+
+    async function getMenuType() {
+        const res = await fetch('./getMenuType', {
+			method: 'POST'
+        })
+
+        let result = await res.text();
+        if(result == 'horizontal') {
+            menuType = '0';
+            checkbox.checked = false;
+        }else {
+            menuType = '1';
+            checkbox.checked = true;
+        }
+    }
+
+    async function changeMenuType() {
+        let menuString = "";
+
+        if(menuType == '1') {
+            menuType = '0';
+            menuString = "horizontal";
+        }else {
+            menuType = '1';
+            menuString = "hamburger";
+        }
+
+        
+
+        const res = await fetch("./changeMenuType", {
+            method: "POST",
+            body: menuString,
+            headers: {"content-type": "application/json"}
+        });
+
+        let result = await res.json();
+        if (result.type != "success") {
+            alert(result.message);
+            return;
+        }
+    }
 </script>
 
 <div class="menuContainer">
     <label class="switch btn-color-mode-switch">
         <p>Menu type:</p> 
-        <input type="checkbox" name="color_mode" id="color_mode" value="1">
-        <label for="color_mode" data-on="Hamburger" data-off="Vertical" class="btn-color-mode-switch-inner"></label>
+        <input bind:this={checkbox} on:change={changeMenuType} bind:value={menuType} type="checkbox" name="color_mode" id="color_mode">
+        <label for="color_mode" data-on="Hamburger" data-off="Horizontal" class="btn-color-mode-switch-inner"></label>
     </label>
 
     <div class="menuList">
@@ -116,8 +159,6 @@
     }
 
     .btn-color-mode-switch input[type="checkbox"]:checked + label.btn-color-mode-switch-inner{
-        background: #ff4b2b;
-        color: #424242;
         left: 0;
     }
 
@@ -130,7 +171,11 @@
     .btn-color-mode-switch input[type="checkbox"]:checked + label.btn-color-mode-switch-inner:before{
         content: attr(data-off);
         right: auto;
-        left: 28px;
+        left: 20px;
+        color: white;
+    }
+
+    .btn-color-mode-switch label.btn-color-mode-switch-inner:before{
         color: white;
     }
 </style>

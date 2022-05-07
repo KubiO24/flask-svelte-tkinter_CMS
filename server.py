@@ -106,6 +106,25 @@ myCursor.execute("""CREATE TABLE IF NOT EXISTS menu (
     id INTEGER PRIMARY KEY AUTOINCREMENT
 )""")
 
+
+# menu table
+myCursor.execute("""CREATE TABLE IF NOT EXISTS menuType (
+    type TEXT
+)""")
+myCursor.execute("""
+    INSERT INTO menuType (type)
+    SELECT 'horizontal'
+    WHERE NOT EXISTS(SELECT 1 FROM menuType);
+""")
+
+
+# footer table
+myCursor.execute("""CREATE TABLE IF NOT EXISTS footer (
+    text TEXT,
+    link TEXT,
+    id INTEGER PRIMARY KEY AUTOINCREMENT
+)""")
+
 myConnection.commit()
 
 
@@ -368,6 +387,68 @@ def deleteMenu():
     id = request.data.decode("utf-8")
     myCursor.execute(
         f'DELETE FROM menu WHERE id={id};')
+    myConnection.commit()
+    return {"type": "success"}
+
+@app.route("/getMenuType", methods=['POST'])
+def getMenuType():
+    myCursor = myConnection.cursor()
+    myCursor.execute(f'SELECT * FROM menuType')
+    menu = myCursor.fetchall()
+    return menu[0][0]
+
+@app.route("/changeMenuType", methods=['POST'])
+def changeMenuType():
+    menuType = request.data.decode("utf-8")
+    lastType = ''
+    if menuType == 'horizontal':
+        lastType = 'hamburger'
+    else:
+        lastType = 'horizontal'
+
+    myCursor.execute(f"""
+        UPDATE menuType
+        SET type="{menuType}"
+        WHERE type="{lastType}";
+    """)
+    myConnection.commit()
+    return {"type": "success"}
+
+@app.route("/getFooter", methods=['POST'])
+def getFooter():
+    myCursor.execute(f'SELECT * FROM footer')
+    footer = json.dumps(myCursor.fetchall())
+    return footer
+
+@app.route("/saveFooter", methods=['POST'])
+def saveFooter():
+    text = request.json['text']
+    link = request.json['link']
+    myCursor.execute(f"""
+        INSERT INTO footer (text, link)
+        VALUES ('{text}','{link}')
+    """)
+    myConnection.commit()
+    myCursor.execute("select seq from sqlite_sequence WHERE name = 'footer'")
+    lastId = myCursor.fetchall()
+    return {"type": "success", 'message': lastId[0][0]}
+
+@app.route("/updateFooter", methods=['POST'])
+def updateFooter():
+    footer = request.json
+    myCursor.execute(f"""
+        UPDATE footer 
+        SET text="{footer['text']}", link="{footer['link']}"
+        WHERE id={footer['id']};
+    """)
+    myConnection.commit()
+    return {"type": "success"}
+
+@app.route("/deleteFooter", methods=['POST'])
+def deleteFooter():
+    id = request.data.decode("utf-8")
+    myCursor.execute(
+        f'DELETE FROM footer WHERE id={id};')
     myConnection.commit()
     return {"type": "success"}
 
