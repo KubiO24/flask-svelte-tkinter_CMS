@@ -56,7 +56,6 @@
                 "content-type": "application/json",
             },
         });
-        console.log(list);
         let result = await res.text();
         if (result != "success") console.log("Error while saving blocks");
     }

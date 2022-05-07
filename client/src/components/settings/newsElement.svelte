@@ -1,67 +1,160 @@
 <script>
-    let title, description, category, images, selectedImage, fileInput;
+    export let news;
+    export let newsList;
+    let title, description, category, images, fileInput, imagesString, saveOrAdd, thisNews, originalTitle, imagesBase64Array, imageIndex;
+
     title = "";
     description = "";
     category = "";
-    function save() {
-        console.log(title)
-        if(title == "" || description == "" || category == "") {
-            alert("Title or Description or Category is empty!")
-            return;
+    images = "";
+    saveOrAdd = "Add"
+    imagesBase64Array = [];
+    imageIndex = 0;
+
+    if(news != undefined) {
+        title = news[0];
+        description = news[1]
+        category = news[2]
+        if(news[3] != '') {
+            imagesBase64Array = news[3].split('.');      
         }
+        saveOrAdd = "Save";
+        originalTitle = title;
     }
 
-    function loadedImage() {
-        console.log(images)
-        selectedImage = images[0].name;
+    const toBase64 = file => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+    });
+
+    async function save() {
+        event.preventDefault();
+
+        imagesString = "";
+        if(imagesBase64Array.length > 0) {
+            imagesString = imagesBase64Array.join('.');
+        }   
+        if(saveOrAdd == "Add") {
+            const res = await fetch("./saveNews", {
+                method: "POST",
+                body: JSON.stringify({
+                    title: title,
+                    description: description,
+                    category: category,
+                    images: imagesString
+                }),
+                headers: {"content-type": "application/json"}
+            });
+            let result = await res.json();
+            if (result.type != "success") {
+                console.log(result.message);
+                return;
+            }
+            newsList = [...newsList, [title, description, category, imagesString]];
+            title = "";
+            description = "";
+            category = "";
+            images = "";
+            saveOrAdd = "Add";
+            imagesBase64Array = [];
+            imageIndex = 0;
+        }else {
+            const res = await fetch("./updateNews", {
+                method: "POST",
+                body: JSON.stringify({
+                    originalTitle: originalTitle,
+                    title: title,
+                    description: description,
+                    category: category,
+                    images: imagesString
+                }),
+                headers: {"content-type": "application/json"}
+            });
+            let result = await res.json();
+            if (result.type != "success") console.log(result.message);
+        }    
+    }
+
+    async function deleteNews() {
+        const res = await fetch('./deleteNews', {
+			method: 'POST',
+            body: title
+        })
+
+        let result = await res.json()
+        if (result.type != "success") return;
+        thisNews.remove();
+    }
+
+    async function loadedImage() {
+        for(const img of images) {
+            let imageSrc = await toBase64(img);
+            imagesBase64Array.push(imageSrc);
+        }
+
+        imageIndex = imagesBase64Array.length - 1;
     }
 
     function deleteImage() {
-        if(images == undefined) return;
-        if(images.length == 0) return;
-        const imageArray = [...images] 
-        let i = 0;
-        for(let image of imageArray) {
-            if(image.name == selectedImage) {
-                imageArray.splice(i, 1)
-            };
-            i += 1;
+        if(imagesBase64Array.length == 0) return;   
+        imagesBase64Array.splice(imageIndex, 1);
+        imagesBase64Array = imagesBase64Array;
+    }
+
+    function previousImage() {
+        if (imageIndex > 0) {
+            imageIndex -= 1; 
+        }else {
+            imageIndex = imagesBase64Array.length - 1;
         }
-        images=imageArray;
-        if(images.length != 0) selectedImage = images[0].name;      
+    }
+
+    function nextImage() {
+        if ((imageIndex + 1) < imagesBase64Array.length) {
+            imageIndex += 1;
+        }else {
+            imageIndex = 0;
+        }
     }
 </script>
 
-<div class="news">
-    <div class="newsContent">
+<div bind:this={thisNews} class="news">
+    <form class="newsContent" on:submit={save} >
         <div class="newsContent2">
             <div class="newsValues">
-                <input bind:value={title} type="text" placeholder="News Title">
-                <textarea bind:value={description} cols="30" rows="10" placeholder="News Description"></textarea>
+                <input bind:value={title} type="text" name="title" placeholder="News Title" required>
+                <textarea bind:value={description} cols="30" rows="10" placeholder="News Description" required></textarea>
             </div>
             <div class="newsValues">
-                <input bind:value={category} type="text" placeholder="News Category">
+                <input bind:value={category} type="text" placeholder="News Category" required>
 
                 <div class='galleryBox'>
-                    gallery:
-                    <select bind:value={selectedImage}>
-                        {#if images && images[0]}
-                            {#each images as image}
-                                <option value={image.name}>{image.name}</option>
-                            {/each}
-                        {/if}
-                    </select>
+                    {#if imagesBase64Array.length > 0}
+                        gallery:
+                        <img class="img" src={imagesBase64Array[imageIndex]} alt="News photo">
+                    {:else}
+                        gallery is empty
+                    {/if}
+                    <div style="display: flex; width: 100%; margin-top: 5px;">
+                        <button type="button" on:click={previousImage} >Previous</button>
+                        <button type="button" on:click={nextImage} style="margin-left: 5px">Next</button>
+                    </div>                 
+                    <button type="button" on:click={deleteImage}>Delete selected from gallery</button>
                     <input bind:this={fileInput} bind:files={images} on:change={loadedImage} type="file" name="img" accept="image/*" multiple style="display: none;">
                     <input class="fileInput" type="button" value="Add image to gallery" on:click={()=>fileInput.click()} style="margin-bottom: 5px;" />
-                    <button on:click={deleteImage}>Delete selected from gallery</button>
                 </div>
             </div>
         </div>
         
         <div class="newsContent2" style="justify-content: center;">
-            <button on:click={save} class="saveButton">save</button>
+            <input type="submit" class="saveButton" value={saveOrAdd} />
+            {#if saveOrAdd == "Save"}
+                <button on:click={deleteNews} class="saveButton delete">Delete</button>
+            {/if}
         </div>  
-    </div> 
+    </form> 
 </div>
 
 <style>
@@ -105,9 +198,10 @@
         margin: 0;
     }
 
-    select {
-        width: 100px;
-        margin-top: 2px;
+    .img {
+       max-height: 90px;
+       max-width: 100%;
+       margin-top: 5px;
     }
 
     .fileInput {
@@ -120,9 +214,6 @@
         align-items: center;
     }
 
-    .galleryBox select {
-        width: 100%;
-    }
 
     .galleryBox button {
         width: 100%;
@@ -130,7 +221,8 @@
 
     .saveButton {
         width: 100px;
-        padding: 10px 40px;
+        height: 43px;
+        padding: 10px 0;
         margin-top: 30px;
         color: white;
         background-color: #FF4B2B;
@@ -140,6 +232,7 @@
         transition: transform 80ms ease-in;
         display: flex;
         justify-content: center;
+        text-align: center;
     }
 
     .saveButton:active {
@@ -149,6 +242,17 @@
     .saveButton:focus {
         outline: none;
         background-color: #FF4B2B;
+    }
+
+    .delete {
+        margin-left: 10px;
+        background-color: #000000;
+        border-color:  #000000;
+    }
+
+    .delete:focus {
+        outline: none;
+        background-color: #000000;
     }
     
 </style>

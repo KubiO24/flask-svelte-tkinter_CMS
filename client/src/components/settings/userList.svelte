@@ -20,7 +20,6 @@
         })
 
         userList = await res.json()
-        console.log(userList)
     }
 </script>
 

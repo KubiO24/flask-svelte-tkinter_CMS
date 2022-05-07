@@ -2,6 +2,7 @@ import flask
 from flask import Flask, send_from_directory, request
 import sqlite3
 import json
+import os
 
 app = Flask(__name__)
 myConnection = sqlite3.connect('data.sqlite', check_same_thread=False)
@@ -64,7 +65,7 @@ myCursor.execute("""CREATE TABLE IF NOT EXISTS blocks (
 # add themes if not exists
 myCursor.execute("""
     INSERT INTO blocks (name, active, orderIndex)
-        SELECT 'navbar', 'true', '0'
+    SELECT 'navbar', 'true', '0'
     WHERE NOT EXISTS(SELECT 1 FROM blocks WHERE name = 'navbar');
 """)
 myCursor.execute("""
@@ -88,6 +89,15 @@ myCursor.execute("""
     WHERE NOT EXISTS(SELECT 1 FROM blocks WHERE name = 'footer');
 """)
 
+
+# themes table
+myCursor.execute("""CREATE TABLE IF NOT EXISTS news (
+    title TEXT,
+    description TEXT,
+    category TEXT,
+    images TEXT
+)""")
+
 myConnection.commit()
 
 
@@ -95,9 +105,17 @@ myConnection.commit()
 
 
 def userExist(username):
-    print(username)
     myCursor.execute(
         f'SELECT EXISTS(SELECT 1 FROM userList WHERE LOWER(username)=LOWER("{username}"))')
+    row = myCursor.fetchall()
+    if row[0][0] == 1:
+        return True
+    return False
+
+
+def newsTitleExist(title):
+    myCursor.execute(
+        f'SELECT EXISTS(SELECT 1 FROM news WHERE LOWER(title)=LOWER("{title}"))')
     row = myCursor.fetchall()
     if row[0][0] == 1:
         return True
@@ -152,6 +170,7 @@ def login():
 @app.route("/getPermission", methods=['POST'])
 def getPermission():
     username = request.data.decode("utf-8")
+    myCursor = myConnection.cursor()
     myCursor.execute(
         f'SELECT userType FROM userList WHERE LOWER(userName) = LOWER("{username}");')
     permission = myCursor.fetchall()[0][0]
@@ -188,7 +207,6 @@ def deleteUser():
     myCursor.execute(
         f'DELETE FROM userList WHERE LOWER(username)=LOWER("{username}");')
     myConnection.commit()
-    print(username)
     return "success"
 
 
@@ -262,9 +280,48 @@ def saveBlocks():
                 WHERE LOWER(name)=LOWER("{block['name']}");
             """)
         i += 1
-    # myConnection.commit()
+    myConnection.commit()
     return 'success'
 
+@app.route("/getNews", methods=['POST'])
+def getNews():
+    myCursor.execute(f'SELECT * FROM news')
+    news = json.dumps(myCursor.fetchall())
+    return news
+
+@app.route("/saveNews", methods=['POST'])
+def saveNews():
+    news = request.json
+    if newsTitleExist(news['title']):
+        return {"type": "error", "message": "News title already exists"}
+
+    myCursor.execute(f"""
+        INSERT INTO news (title, description, category, images)
+        VALUES ('{news['title']}','{news['description']}','{news['category']}','{news['images']}')
+    """)
+    myConnection.commit()
+    return {"type": "success"}
+
+@app.route("/updateNews", methods=['POST'])
+def updateNews():
+    news = request.json
+    if newsTitleExist(news['title']) and news['originalTitle'].lower() != news['title'].lower():
+        return {"type": "error", "message": "News title already exists"}
+    myCursor.execute(f"""
+        UPDATE news 
+        SET title="{news['title']}", description="{news['description']}", category="{news['category']}", images="{news['images']}" 
+        WHERE LOWER(title)=LOWER("{news['originalTitle']}");
+    """)
+    myConnection.commit()
+    return {"type": "success"}
+
+@app.route("/deleteNews", methods=['POST'])
+def deleteNews():
+    title = request.data.decode("utf-8")
+    myCursor.execute(
+        f'DELETE FROM news WHERE LOWER(title)=LOWER("{title}");')
+    myConnection.commit()
+    return {"type": "success"}
 
 @app.route("/getData", methods=['POST'])
 def getData():
