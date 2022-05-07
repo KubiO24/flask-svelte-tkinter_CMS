@@ -105,27 +105,8 @@
     </div>
   </div>
 </div>
-<div class="saveSettings">
-  <button on:click={getData}>Save Settings</button>
-</div>
 
 <style>
-  .saveSettings {
-    width: 100%;
-    margin: 30px 0;
-    display: flex;
-    justify-content: center;
-  }
-  .saveSettings > button {
-    padding: 10px 40px;
-    color: white;
-    background-color: #ff4b2b;
-    border: 1px solid #ff4b2b;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: transform 80ms ease-in;
-    margin-top: 10px;
-  }
   .settingsBox {
     width: 60%;
 

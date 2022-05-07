@@ -36,6 +36,7 @@
 
     function changePreset() {
         refreshSelected();
+        savePreset();
     }
 
     async function savePreset() {
@@ -79,6 +80,7 @@
         }
            
         refreshSelected();
+        savePreset();
     }
 
     function refreshSelected() {

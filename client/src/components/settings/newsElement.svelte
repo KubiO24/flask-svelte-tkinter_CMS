@@ -17,6 +17,7 @@
         category = news[2]
         if(news[3] != '') {
             imagesBase64Array = news[3].split('.');      
+            console.log(imagesBase64Array.length)
         }
         saveOrAdd = "Save";
         originalTitle = title;
