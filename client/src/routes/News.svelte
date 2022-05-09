@@ -37,6 +37,7 @@
         return res;
     }
     let data = getData();
+    console.log(params);
 </script>
 
 {#await data}
