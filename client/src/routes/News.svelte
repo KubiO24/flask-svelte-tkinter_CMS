@@ -2,46 +2,26 @@
     import Header from "../components/header.svelte";
     import Footer from "../components/footer.svelte";
     import Blocks from "../components/settings/blocks.svelte";
-    const newsObj = {
-        title: "Title",
-        description: "Lorem ipmsum",
-        category: "Category",
-        gallery: [
-            {
-                sliderPhoto: "../static/xyz1.jpg",
-                sliderText: "Teskt1 na sliderze",
-            },
-            {
-                sliderPhoto: "../static/xyz2.jpg",
-                sliderText: "Teskt2 na sliderze",
-            },
-            {
-                sliderPhoto: "../static/xyz2.jpg",
-                sliderText: "Teskt3 na sliderze",
-            },
-            {
-                sliderPhoto: "../static/xyz2.jpg",
-                sliderText: "Teskt4 na sliderze",
-            },
-            {
-                sliderPhoto: "../static/xyz2.jpg",
-                sliderText: "Teskt5 na sliderze",
-            },
-        ],
-    };
 
     let logged = false;
     let username = localStorage.getItem("userLoginned");
     if ((username === null || username === "null") === false) logged = true;
     let bgColor;
     let color;
+    let news;
     async function getData() {
-        let URL = "./data.json";
-        let res = await fetch(URL);
+        let res = await fetch("./getData", {
+            method: "POST",
+        });
         res = await res.json();
         bgColor = res.theme.mainBackground;
         color = res.theme.mainColor;
-        res["news"] = [newsObj];
+        res.blocks.forEach((el) => {
+            if (el.type === "news") {
+                news = el.newsItems;
+            }
+        });
+        console.log(news);
         return res;
     }
     let data = getData();
@@ -63,7 +43,16 @@
             isLogged={logged}
         />
         <div style="padding: 60px;" />
-        {#each data.news as item}{/each}
-        <Footer copyrights={data.blocks[data.blocks.length - 1].footerText} />
+
+        <div class="container">
+            <h2>{news[0].newsTitle}</h2>
+            <h5>{news[0].newsCategory}</h5>
+            <article>{news[0].newsText}</article>
+        </div>
+
+        <Footer
+            footerItems={data.blocks[data.blocks.length - 1].footerItems}
+            copyrights={data.blocks[data.blocks.length - 1].footerText}
+        />
     </div>
 {/await}

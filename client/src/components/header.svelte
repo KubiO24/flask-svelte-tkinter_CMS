@@ -6,7 +6,6 @@
     export let isLogged;
 
     let active = false;
-    console.log(navbarType);
     const toggleMenu = () => {
         active ? (active = false) : (active = true);
 

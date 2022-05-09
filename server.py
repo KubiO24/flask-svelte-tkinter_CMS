@@ -513,13 +513,14 @@ def getData():
     myCursor.execute(f'SELECT * FROM news')
     newsTab = myCursor.fetchall()
 
-    for i in newsTab:
+    for idx, i in enumerate(newsTab):
         news.append(
             {
                 "newsCategory": i[2],
                 "newsTitle": i[0],
                 "newsText": i[1],
-                "newsPhoto": i[3]
+                "newsPhoto": i[3],
+                "newsIndex": idx
             }
         )
     resBlocks = [nav]

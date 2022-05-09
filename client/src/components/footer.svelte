@@ -1,8 +1,6 @@
 <script>
     export let copyrights;
     export let footerItems;
-
-    console.log(footerItems);
 </script>
 
 <footer>
