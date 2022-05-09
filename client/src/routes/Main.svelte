@@ -119,10 +119,7 @@
           color2={data.theme.mainColor}
           isLogged={logged}
         />
-        <div
-          style="padding: 60px
-;"
-        />
+        <div style="padding: 60px;" />
       {/if}
 
       {#if item.type === "slider"}
@@ -163,7 +160,7 @@
         </div>
       {/if}
       {#if item.type === "footer"}
-        <Footer copyrights={item.footerText} />
+        <Footer footerItems={item.footerItems} copyrights={item.footerText} />
       {/if}
     {/each}
   </div>

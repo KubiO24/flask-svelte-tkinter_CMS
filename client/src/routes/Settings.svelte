@@ -1,11 +1,11 @@
 <script>
-    import Themes from "../components/settings/themes.svelte";
-    import Blocks from "../components/settings/blocks.svelte";
-    import Menu from "../components/settings/menu.svelte"
-    import Slider from "../components/settings/slider.svelte"
-    import News from "../components/settings/news.svelte";
-    import Footer from "../components/settings/footer.svelte";
-    import UserList from "../components/settings/userList.svelte";
+  import Themes from "../components/settings/themes.svelte";
+  import Blocks from "../components/settings/blocks.svelte";
+  import Menu from "../components/settings/menu.svelte";
+  import Slider from "../components/settings/slider.svelte";
+  import News from "../components/settings/news.svelte";
+  import Footer from "../components/settings/footer.svelte";
+  import UserList from "../components/settings/userList.svelte";
 
   let username,
     permissionLevel,
@@ -46,44 +46,37 @@
 
   function open(x) {
     switch (x) {
-        case "themes":
-            selectedSetting = Themes;
-            settingProps = {};
-            break;
-        case "blocks":
-            selectedSetting = Blocks;
-            settingProps = {};
-            break;
-        case "menu":
-            selectedSetting = Menu;
-            settingProps = {};
-            break;   
-        case "slider":
-            selectedSetting = Slider;
-            settingProps = {};
-            break;
-        case "news":
-            selectedSetting = News;
-            settingProps = {};
-            break;
-        case "footer":
-            selectedSetting = Footer;
-            settingProps = {};
-            break;
-        case "userList":
-            selectedSetting = UserList;
-            settingProps = { permissionLevel: permissionLevel, username: username };
-            break;
-        default:
-            console.log(`Failed to open: ${x}`);
+      case "themes":
+        selectedSetting = Themes;
+        settingProps = {};
+        break;
+      case "blocks":
+        selectedSetting = Blocks;
+        settingProps = {};
+        break;
+      case "menu":
+        selectedSetting = Menu;
+        settingProps = {};
+        break;
+      case "slider":
+        selectedSetting = Slider;
+        settingProps = {};
+        break;
+      case "news":
+        selectedSetting = News;
+        settingProps = {};
+        break;
+      case "footer":
+        selectedSetting = Footer;
+        settingProps = {};
+        break;
+      case "userList":
+        selectedSetting = UserList;
+        settingProps = { permissionLevel: permissionLevel, username: username };
+        break;
+      default:
+        console.log(`Failed to open: ${x}`);
     }
-  }
-
-  async function getData() {
-    console.log("getdata");
-    const res = await fetch("./getData", {
-      method: "POST",
-    });
   }
 </script>
 
@@ -225,9 +218,9 @@
     overflow-x: auto;
   }
 
-@media (max-width: 500px) {
+  @media (max-width: 500px) {
     .settingsBox {
-        width: 100%;
+      width: 100%;
     }
-}
+  }
 </style>

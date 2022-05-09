@@ -1,11 +1,16 @@
 <script>
     export let copyrights;
+    export let footerItems;
+
+    console.log(footerItems);
 </script>
 
 <footer>
     <div class="contatiner">
         <div class="links">
-            <p>======links======</p>
+            {#each footerItems as item}
+                <a href={item.link}>{item.text}</a>
+            {/each}
         </div>
         <div class="copyrights">©{copyrights}</div>
     </div>
