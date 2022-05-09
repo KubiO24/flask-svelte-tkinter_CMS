@@ -597,53 +597,5 @@ def getData():
     return finalJSON
 
 
-@app.route("/saveData", methods=['POST'])
-def saveData():
-    theme = []
-    blocks = []
-    myCursor.execute(f'SELECT * FROM blocks')
-    bblocks = myCursor.fetchall()
-    for i in bblocks:
-        if i[1] == 'true':
-            blocks.append(i)
-    hV = ()
-    isSorted = False
-    while isSorted == False:
-        isSorted = True
-        for i in range(1, len(blocks)-1):
-            if blocks[i][2] > blocks[i+1][2]:
-                hV = blocks[i]
-                blocks[i] = blocks[i+1]
-                blocks[i+1] = hV
-                isSorted = False
-    myCursor.execute(f'SELECT * FROM themes')
-    themes = myCursor.fetchall()
-    for i in themes:
-        if i[7] == 1:
-            theme = i
-
-    print(blocks, theme, flush=True)
-
-    for i in blocks:
-        if i[0] == 'slider':
-            print('slider', flush=True)
-        elif i[0] == 'news':
-            print('news', flush=True)
-        elif i[0] == 'content':
-            print('content', flush=True)
-    finalJSON = {
-        "theme": {
-            "mainColor": theme[1],
-            "secondColor": theme[2],
-            "mainBackground": theme[3],
-            "newsBorder": theme[4],
-            "secondBackground": theme[5],
-            "font": "Roboto"
-        },
-    }
-
-    return 'success'
-
-
 if __name__ == "__main__":
     app.run(debug=True)
