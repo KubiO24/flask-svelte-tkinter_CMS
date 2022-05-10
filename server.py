@@ -151,6 +151,7 @@ myConnection.commit()
 
 
 def userExist(username):
+    myCursor = myConnection.cursor()
     myCursor.execute(
         f'SELECT EXISTS(SELECT 1 FROM userList WHERE LOWER(username)=LOWER("{username}"))')
     row = myCursor.fetchall()
@@ -160,6 +161,7 @@ def userExist(username):
 
 
 def newsTitleExist(title):
+    myCursor = myConnection.cursor()
     myCursor.execute(
         f'SELECT EXISTS(SELECT 1 FROM news WHERE LOWER(title)=LOWER("{title}"))')
     row = myCursor.fetchall()
@@ -189,6 +191,7 @@ def register():
     if userExist(username):
         return '0'
 
+    myCursor = myConnection.cursor()
     myCursor.execute(f"""INSERT INTO userList
         (username, email, password, userType)
         VALUES
@@ -203,6 +206,7 @@ def login():
     username = data["username"]
     password = data["password"]
 
+    myCursor = myConnection.cursor()
     myCursor.execute(
         f'SELECT EXISTS(SELECT 1 FROM userList WHERE LOWER(username)=LOWER("{username}") AND password="{password}")')
     row = myCursor.fetchall()
@@ -224,6 +228,7 @@ def getPermission():
 @app.route("/getProperUsername", methods=['POST'])
 def getProperUsername():
     username = request.data.decode("utf-8")
+    myCursor = myConnection.cursor()
     myCursor.execute(
         f'SELECT userName FROM userList WHERE LOWER(userName) = LOWER("{username}");')
     userName = myCursor.fetchall()[0][0]
@@ -232,6 +237,7 @@ def getProperUsername():
 
 @app.route("/getUserList", methods=['POST'])
 def getUserList():
+    myCursor = myConnection.cursor()
     permissionLevel = request.json['permissionLevel']
     username = request.json['username']
     print(username)
@@ -248,6 +254,7 @@ def getUserList():
 @app.route("/deleteUser", methods=['POST'])
 def deleteUser():
     username = request.data.decode("utf-8")
+    myCursor = myConnection.cursor()
     myCursor.execute(
         f'DELETE FROM userList WHERE LOWER(username)=LOWER("{username}");')
     myConnection.commit()
@@ -271,6 +278,7 @@ def editUser():
     if permissionLevel != '0' and permissionLevel != '1' and permissionLevel != '2':
         return {'type': "error", 'message': "Wrong permission level"}
 
+    myCursor = myConnection.cursor()
     myCursor.execute(f"""
         UPDATE userList 
         SET username="{username}", email="{email}", password="{password}", userType="{permissionLevel}" 
@@ -282,6 +290,7 @@ def editUser():
 
 @app.route("/getPresets", methods=['POST'])
 def getPresets():
+    myCursor = myConnection.cursor()
     myCursor.execute(f'SELECT * FROM themes')
     themes = json.dumps(myCursor.fetchall())
     return themes
@@ -289,6 +298,7 @@ def getPresets():
 
 @app.route("/savePreset", methods=['POST'])
 def savePreset():
+    myCursor = myConnection.cursor()
     myCursor.execute(f"""
                 UPDATE themes 
                 SET selected=0
@@ -308,6 +318,7 @@ def savePreset():
 
 @app.route("/getBlocks", methods=['POST'])
 def getBlocks():
+    myCursor = myConnection.cursor()
     myCursor.execute(f'SELECT * FROM blocks')
     blocks = json.dumps(myCursor.fetchall())
     return blocks
@@ -318,6 +329,7 @@ def saveBlocks():
     blocks = request.json
     i = 0
     for block in blocks:
+        myCursor = myConnection.cursor()
         myCursor.execute(f"""
                 UPDATE blocks
                 SET active="{block['active']}", orderIndex="{i}"
@@ -330,6 +342,7 @@ def saveBlocks():
 
 @app.route("/getNews", methods=['POST'])
 def getNews():
+    myCursor = myConnection.cursor()
     myCursor.execute(f'SELECT * FROM news')
     news = json.dumps(myCursor.fetchall())
     return news
@@ -341,6 +354,7 @@ def saveNews():
     if newsTitleExist(news['title']):
         return {"type": "error", "message": "News title already exists"}
 
+    myCursor = myConnection.cursor()
     myCursor.execute(f"""
         INSERT INTO news (title, description, category, images)
         VALUES ('{news['title']}','{news['description']}','{news['category']}','{news['images']}')
@@ -354,8 +368,10 @@ def updateNews():
     news = request.json
     if news['title'].lower() == 'title':
         return {"type": "error", "message": "c'mon can't you think about a better title?"}
-    if newsTitleExist(news['title']) and news['originalTitle'].lower() != news['title'].lower():
-        return {"type": "error", "message": "News title already exists"}
+    if newsTitleExist(news['title']):
+        if news['originalTitle'].lower() != news['title'].lower():
+            return {"type": "error", "message": "News title already exists"}
+    myCursor = myConnection.cursor()
     myCursor.execute(f"""
         UPDATE news 
         SET title="{news['title']}", description="{news['description']}", category="{news['category']}", images="{news['images']}" 
@@ -368,6 +384,7 @@ def updateNews():
 @app.route("/deleteNews", methods=['POST'])
 def deleteNews():
     title = request.data.decode("utf-8")
+    myCursor = myConnection.cursor()
     myCursor.execute(
         f'DELETE FROM news WHERE LOWER(title)=LOWER("{title}");')
     myConnection.commit()
@@ -376,6 +393,7 @@ def deleteNews():
 
 @app.route("/getMenu", methods=['POST'])
 def getMenu():
+    myCursor = myConnection.cursor()
     myCursor.execute(f'SELECT * FROM menu')
     menu = json.dumps(myCursor.fetchall())
     return menu
@@ -385,11 +403,13 @@ def getMenu():
 def saveMenu():
     text = request.json['text']
     link = request.json['link']
+    myCursor = myConnection.cursor()
     myCursor.execute(f"""
         INSERT INTO menu (text, link)
         VALUES ('{text}','{link}')
     """)
     myConnection.commit()
+    myCursor = myConnection.cursor()
     myCursor.execute("select seq from sqlite_sequence WHERE name = 'menu'")
     lastId = myCursor.fetchall()
     return {"type": "success", 'message': lastId[0][0]}
@@ -398,6 +418,7 @@ def saveMenu():
 @app.route("/updateMenu", methods=['POST'])
 def updateMenu():
     menu = request.json
+    myCursor = myConnection.cursor()
     myCursor.execute(f"""
         UPDATE menu 
         SET text="{menu['text']}", link="{menu['link']}"
@@ -410,6 +431,7 @@ def updateMenu():
 @app.route("/deleteMenu", methods=['POST'])
 def deleteMenu():
     id = request.data.decode("utf-8")
+    myCursor = myConnection.cursor()
     myCursor.execute(
         f'DELETE FROM menu WHERE id={id};')
     myConnection.commit()
@@ -433,6 +455,7 @@ def changeMenuType():
     else:
         lastType = 'horizontal'
 
+    myCursor = myConnection.cursor()
     myCursor.execute(f"""
         UPDATE menuType
         SET type="{menuType}"
@@ -444,6 +467,7 @@ def changeMenuType():
 
 @app.route("/getFooter", methods=['POST'])
 def getFooter():
+    myCursor = myConnection.cursor()
     myCursor.execute(f'SELECT * FROM footer')
     footer = json.dumps(myCursor.fetchall())
     return footer
@@ -453,6 +477,7 @@ def getFooter():
 def saveFooter():
     text = request.json['text']
     link = request.json['link']
+    myCursor = myConnection.cursor()
     myCursor.execute(f"""
         INSERT INTO footer (text, link)
         VALUES ('{text}','{link}')
@@ -466,6 +491,7 @@ def saveFooter():
 @app.route("/updateFooter", methods=['POST'])
 def updateFooter():
     footer = request.json
+    myCursor = myConnection.cursor()
     myCursor.execute(f"""
         UPDATE footer 
         SET text="{footer['text']}", link="{footer['link']}"
@@ -478,6 +504,7 @@ def updateFooter():
 @app.route("/deleteFooter", methods=['POST'])
 def deleteFooter():
     id = request.data.decode("utf-8")
+    myCursor = myConnection.cursor()
     myCursor.execute(
         f'DELETE FROM footer WHERE id={id};')
     myConnection.commit()
@@ -485,6 +512,7 @@ def deleteFooter():
 
 @app.route("/getSlider", methods=['POST'])
 def getSlider():
+    myCursor = myConnection.cursor()
     myCursor.execute(f'SELECT * FROM slider')
     slider = json.dumps(myCursor.fetchall())
     return slider
@@ -494,11 +522,13 @@ def saveSlide():
     text = request.json['text']
     image = request.json['image']
     order = request.json['order']
+    myCursor = myConnection.cursor()
     myCursor.execute(f"""
         INSERT INTO slider (text, image, orderIndex)
         VALUES ('{text}','{image}', '{order}')
     """)
     myConnection.commit()
+    myCursor = myConnection.cursor()
     myCursor.execute("select seq from sqlite_sequence WHERE name = 'slider'")
     lastId = myCursor.fetchall()
     return {"type": "success", 'message': lastId[0][0]}
@@ -506,6 +536,7 @@ def saveSlide():
 @app.route("/updateSlide", methods=['POST'])
 def updateSlide():
     slider = request.json
+    myCursor = myConnection.cursor()
     myCursor.execute(f"""
         UPDATE slider 
         SET text="{slider['text']}", image="{slider['image']}"
@@ -517,6 +548,7 @@ def updateSlide():
 @app.route("/deleteSlide", methods=['POST'])
 def deleteSlide():
     id = request.data.decode("utf-8")
+    myCursor = myConnection.cursor()
     myCursor.execute(
         f'DELETE FROM slider WHERE id={id};')
     myConnection.commit()
