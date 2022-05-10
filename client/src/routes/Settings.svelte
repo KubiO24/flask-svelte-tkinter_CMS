@@ -111,7 +111,7 @@
     </div>
 
     <div class="settings" style="height: {menuHeight}px;">
-      <svelte:component this={selectedSetting} {...settingProps} />
+      <svelte:component this={selectedSetting} {...settingProps} bind:selectedSetting={selectedSetting} />
     </div>
   </div>
 </div>
