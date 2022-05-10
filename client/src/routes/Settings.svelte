@@ -78,13 +78,6 @@
             console.log(`Failed to open: ${x}`);
     }
   }
-
-  async function getData() {
-    console.log("getdata");
-    const res = await fetch("./getData", {
-      method: "POST",
-    });
-  }
 </script>
 
 <div class="settingsBox">
@@ -118,7 +111,7 @@
     </div>
 
     <div class="settings" style="height: {menuHeight}px;">
-      <svelte:component this={selectedSetting} {...settingProps} />
+      <svelte:component this={selectedSetting} {...settingProps} bind:selectedSetting={selectedSetting} />
     </div>
   </div>
 </div>

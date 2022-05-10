@@ -94,6 +94,7 @@
             imagesBase64Array.push(imageSrc);
         }
 
+        imagesBase64Array = imagesBase64Array;
         imageIndex = imagesBase64Array.length - 1;
     }
 
