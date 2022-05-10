@@ -6,7 +6,6 @@
     export let isLogged;
 
     let active = false;
-
     const toggleMenu = () => {
         active ? (active = false) : (active = true);
 
@@ -71,7 +70,7 @@
     {/if}
 </header>
 
-{#if navbarType === "vertical"}
+{#if navbarType === "hamburger"}
     <div class="dark-bg hideBg" id="darkBg" />
     <div
         class="side-menu hide"

@@ -1,84 +1,3 @@
-<!-- 
-    POWODZENIA <333
-    
-    co do typu strony to ja bym narazie zrobił coś w tematyce fitness, siłownia bo obaj się w miare na tym znamy a co najmniej strona nie będzie taka pusta i będzie wiadomo +/- co i jak 
-    
-    FORMAT JSONA:
-    data = {
-        theme: {
-            mainColor: "#ffffff", // główny kolor czcionki
-            secondColor: "#ff0000", // drugi kolor czcionki
-            mainBackground: "#000000", // główny kolor tła
-            secondBackground: "#333333", // drugi kolor tła, nie wiem można np sekcje jakaś zrobic w tym, albo co drugą albo tytuły newsow. Ważne zeby tymi dwoma kolorami dało się ogarnąć cała kolorystyke tej strony,
-            font: "Roboto" // domyślna czcionka
-        },
-
-        blocks: [ // lista bloków w kolejności od pierwszego do ostatniego
-            {
-                type: "navbar", // Typ bloku
-                navbarType: "horizontal(normalne) / vertical(hamburger)", // Zmianę sposobu wyświetlania menu (klasyczne i inne)
-                navbarItems: [
-                    {
-                        navbarText: "Features",   
-                        navbarLink: "/#/Features"
-                    },
-                    {
-                        navbarText: "Pricing",   
-                        navbarLink: "/#/Pricing"
-                    },
-                    {
-                        ...
-                    },
-                    ... 
-                ]
-            },
-
-            {
-                type: "slider",
-                sliderDuration: 500, // Ustawienie czasu przejścia slidera w milisekundach 
-                sliderColor: "white", // kolor czcionki slidera
-                sliderItems: [
-                    {
-                        sliderPhoto: "../static/xyz1.jpg", // Ścieżka do zdjęcia slidera
-                        sliderText: "Teskt1 na sliderze"
-                    },
-                    {
-                        sliderPhoto: "../static/xyz2.jpg",
-                        sliderText: "Teskt2 na sliderze"
-                    },
-                    ...
-                ]
-                
-            },
-
-            {
-                type: "news",
-                newsItems: [
-                    {
-                        newsCategory: "Kategoria artykułu",
-                        newsTitle: "Tytuł artykułu", // Zrobie tak, że nie będzie można dać dwóch takich samych tytułów, więc później jak się wejdzie w artukuł to będzie można pobierać jego komentarze z serwera po tytule
-                        newsText: "Opis artykułu",
-                        newsPhoto: "Ścieżka do zdjęcia artykułu" // W sumie to nie wiem czy musi być zdjęcie, ale chyba lepiej będzie z, ale jak nie chcesz to możesz to wyjebać, tylko powiedz mi to żeby nie robił tego w ustawieniach
-                    },
-                    {
-                        newsCategory: "Advice",
-                        newsTitle: "Best protein flavours 2022",
-                        newsText: "Jakis tam opis, to pozniej mozna wymyslec",
-                        newsPhoto: "Ścieżka do zdjęcia artykułu"
-                    },
-                    ...
-                ]
-                
-            },
-
-            {
-                type: "footer",
-                footerText: "Jakub Kowal - Igor Świerczyński CMS 2022",
-            }
-        ]
-    }
-
- -->
 <script>
   import Header from "../components/header.svelte";
   import NewsContainer from "../components/NewsContainer.svelte";
@@ -119,10 +38,7 @@
           color2={data.theme.mainColor}
           isLogged={logged}
         />
-        <div
-          style="padding: 60px
-;"
-        />
+        <div style="padding: 60px;" />
       {/if}
 
       {#if item.type === "slider"}
@@ -163,7 +79,7 @@
         </div>
       {/if}
       {#if item.type === "footer"}
-        <Footer copyrights={item.footerText} />
+        <Footer footerItems={item.footerItems} copyrights={item.footerText} />
       {/if}
     {/each}
   </div>

@@ -327,11 +327,13 @@ def saveBlocks():
     myConnection.commit()
     return 'success'
 
+
 @app.route("/getNews", methods=['POST'])
 def getNews():
     myCursor.execute(f'SELECT * FROM news')
     news = json.dumps(myCursor.fetchall())
     return news
+
 
 @app.route("/saveNews", methods=['POST'])
 def saveNews():
@@ -345,6 +347,7 @@ def saveNews():
     """)
     myConnection.commit()
     return {"type": "success"}
+
 
 @app.route("/updateNews", methods=['POST'])
 def updateNews():
@@ -361,6 +364,7 @@ def updateNews():
     myConnection.commit()
     return {"type": "success"}
 
+
 @app.route("/deleteNews", methods=['POST'])
 def deleteNews():
     title = request.data.decode("utf-8")
@@ -369,11 +373,13 @@ def deleteNews():
     myConnection.commit()
     return {"type": "success"}
 
+
 @app.route("/getMenu", methods=['POST'])
 def getMenu():
     myCursor.execute(f'SELECT * FROM menu')
     menu = json.dumps(myCursor.fetchall())
     return menu
+
 
 @app.route("/saveMenu", methods=['POST'])
 def saveMenu():
@@ -388,6 +394,7 @@ def saveMenu():
     lastId = myCursor.fetchall()
     return {"type": "success", 'message': lastId[0][0]}
 
+
 @app.route("/updateMenu", methods=['POST'])
 def updateMenu():
     menu = request.json
@@ -399,6 +406,7 @@ def updateMenu():
     myConnection.commit()
     return {"type": "success"}
 
+
 @app.route("/deleteMenu", methods=['POST'])
 def deleteMenu():
     id = request.data.decode("utf-8")
@@ -407,12 +415,14 @@ def deleteMenu():
     myConnection.commit()
     return {"type": "success"}
 
+
 @app.route("/getMenuType", methods=['POST'])
 def getMenuType():
     myCursor = myConnection.cursor()
     myCursor.execute(f'SELECT * FROM menuType')
     menu = myCursor.fetchall()
     return menu[0][0]
+
 
 @app.route("/changeMenuType", methods=['POST'])
 def changeMenuType():
@@ -431,11 +441,13 @@ def changeMenuType():
     myConnection.commit()
     return {"type": "success"}
 
+
 @app.route("/getFooter", methods=['POST'])
 def getFooter():
     myCursor.execute(f'SELECT * FROM footer')
     footer = json.dumps(myCursor.fetchall())
     return footer
+
 
 @app.route("/saveFooter", methods=['POST'])
 def saveFooter():
@@ -450,6 +462,7 @@ def saveFooter():
     lastId = myCursor.fetchall()
     return {"type": "success", 'message': lastId[0][0]}
 
+
 @app.route("/updateFooter", methods=['POST'])
 def updateFooter():
     footer = request.json
@@ -460,6 +473,7 @@ def updateFooter():
     """)
     myConnection.commit()
     return {"type": "success"}
+
 
 @app.route("/deleteFooter", methods=['POST'])
 def deleteFooter():
@@ -568,10 +582,17 @@ def changeSliderDuration():
     myConnection.commit()
     return {"type": "success"}
 
+
 @app.route("/getData", methods=['POST'])
 def getData():
+    nav = {
+        "type": "navbar",
+        "navbarType": "horizontal",
+        "navbarItems": []
+    }
     theme = []
     blocks = []
+    news = []
     myCursor.execute(f'SELECT * FROM blocks')
     bblocks = myCursor.fetchall()
     for i in bblocks:
@@ -587,29 +608,38 @@ def getData():
                 blocks[i] = blocks[i+1]
                 blocks[i+1] = hV
                 isSorted = False
+    myCursor.execute(f'SELECT * FROM menuType')
+    menuType = myCursor.fetchall()
+    nav["navbarType"] = menuType[0][0]
+    myCursor.execute(f'SELECT * FROM menu')
+    links = myCursor.fetchall()
+    for i in links:
+        link = {
+            "navbarText": i[0],
+            "navbarLink": i[1]
+        }
+        nav["navbarItems"].append(link)
+
     myCursor.execute(f'SELECT * FROM themes')
     themes = myCursor.fetchall()
     for i in themes:
         if i[7] == 1:
             theme = i
 
-    print(blocks, theme, flush=True)
-    resBlocks = [
-        {
-            "type": "navbar",
-            "navbarType": "horizontal",
-            "navbarItems": [
-                {
-                    "navbarText": "Features",
-                    "navbarLink": "/#/Features"
-                },
-                {
-                    "navbarText": "Pricing",
-                    "navbarLink": "/#/Pricing"
-                }
-            ]
-        },
-    ]
+    myCursor.execute(f'SELECT * FROM news')
+    newsTab = myCursor.fetchall()
+
+    for idx, i in enumerate(newsTab):
+        news.append(
+            {
+                "newsCategory": i[2],
+                "newsTitle": i[0],
+                "newsText": i[1],
+                "newsPhoto": i[3],
+                "newsIndex": idx
+            }
+        )
+    resBlocks = [nav]
 
     for i in blocks:
         if i[0] == 'slider':
@@ -645,28 +675,27 @@ def getData():
         elif i[0] == 'news':
             resBlocks.append({
                 "type": "news",
-                "newsItems": [
-                    {
-                        "newsCategory": "Kategoria artykułu",
-                        "newsTitle": "Tytuł artykułu",
-                        "newsText": "Opis artykułu",
-                        "newsPhoto": "Ścieżka do zdjęcia artykułu"
-                    },
-                    {
-                        "newsCategory": "Advice",
-                        "newsTitle": "Best protein flavours 2022",
-                        "newsText": "Jakis tam opis, to pozniej mozna wymyslec",
-                        "newsPhoto": "Ścieżka do zdjęcia artykułu"
-                    }
-                ]
+                "newsItems": news
             },)
         elif i[0] == 'content':
             resBlocks.append({
                 "type": "content",
             })
+    footerItems = []
+    myCursor.execute(f'SELECT * FROM footer')
+    footer = myCursor.fetchall()
+    for i in footer:
+        footerItems.append(
+            {
+                "text": i[0],
+                "link": i[1]
+            }
+        )
+
     resBlocks.append(
         {
             "type": "footer",
+            "footerItems": footerItems,
             "footerText": "Jakub Kowal - Igor Świerczyński CMS 2022"
         }
     )
@@ -677,59 +706,11 @@ def getData():
             "mainBackground": theme[3],
             "newsBorder": theme[5],
             "secondBackground": theme[4],
-            "font": "Roboto"
+            "font": theme[6]
         },
         "blocks": resBlocks
     }
     return finalJSON
-
-
-@app.route("/saveData", methods=['POST'])
-def saveData():
-    theme = []
-    blocks = []
-    myCursor.execute(f'SELECT * FROM blocks')
-    bblocks = myCursor.fetchall()
-    for i in bblocks:
-        if i[1] == 'true':
-            blocks.append(i)
-    hV = ()
-    isSorted = False
-    while isSorted == False:
-        isSorted = True
-        for i in range(1, len(blocks)-1):
-            if blocks[i][2] > blocks[i+1][2]:
-                hV = blocks[i]
-                blocks[i] = blocks[i+1]
-                blocks[i+1] = hV
-                isSorted = False
-    myCursor.execute(f'SELECT * FROM themes')
-    themes = myCursor.fetchall()
-    for i in themes:
-        if i[7] == 1:
-            theme = i
-
-    print(blocks, theme, flush=True)
-
-    for i in blocks:
-        if i[0] == 'slider':
-            print('slider', flush=True)
-        elif i[0] == 'news':
-            print('news', flush=True)
-        elif i[0] == 'content':
-            print('content', flush=True)
-    finalJSON = {
-        "theme": {
-            "mainColor": theme[1],
-            "secondColor": theme[2],
-            "mainBackground": theme[3],
-            "newsBorder": theme[4],
-            "secondBackground": theme[5],
-            "font": "Roboto"
-        },
-    }
-
-    return 'success'
 
 
 if __name__ == "__main__":

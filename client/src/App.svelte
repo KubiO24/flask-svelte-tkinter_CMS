@@ -15,7 +15,7 @@
       "/login": Login,
       "/register": Register,
       "/settings": Settings,
-      "/news": News,
+      "/news/:id": News,
     }}
   />
 </main>
