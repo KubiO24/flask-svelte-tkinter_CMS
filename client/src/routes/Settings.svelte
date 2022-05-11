@@ -4,6 +4,7 @@
   import Menu from "../components/settings/menu.svelte";
   import Slider from "../components/settings/slider.svelte";
   import News from "../components/settings/news.svelte";
+  import Content from "../components/settings/content.svelte";
   import Footer from "../components/settings/footer.svelte";
   import UserList from "../components/settings/userList.svelte";
 
@@ -12,8 +13,10 @@
     permission,
     selectedSetting,
     settingProps,
-    menuHeight;
-  selectedSetting = Themes;
+    menuHeight,
+    importInput,
+    importSubmit,
+    importedSettings;
 
   username = localStorage.getItem("userLoginned");
   if (username == null || username == "null")
@@ -32,10 +35,13 @@
 
     if (permissionLevel == 0) {
       permission = "User";
+      selectedSetting = "";
     } else if (permissionLevel == 1) {
       permission = "Privileged User";
+      selectedSetting = News;
     } else if (permissionLevel == 2) {
       permission = "Admin";
+      selectedSetting = Themes;
     }
   }
 
@@ -66,6 +72,10 @@
         selectedSetting = News;
         settingProps = {};
         break;
+      case "content":
+        selectedSetting = Content;
+        settingProps = {};
+        break;
       case "footer":
         selectedSetting = Footer;
         settingProps = {};
@@ -87,7 +97,14 @@
       <div id="permission">Permission: <b>{permission}</b></div>
     </div>
 
-    <div class="control flex-row">
+    <div class="control flex-row">   
+      <form method=post enctype=multipart/form-data action="/importSettings">
+        <input bind:this={importInput} bind:files={importedSettings} on:change={()=>importSubmit.click()} type="file" name="file" accept=".sql" style="display: none;">
+        <button type="button" class="controlButton" on:click={()=>importInput.click()}>Import</button>
+        <input bind:this={importSubmit} type=submit style="display: none;">
+      </form>
+
+      <button class="controlButton" on:click={() => {document.location = "/exportSettings"}}>Export</button>
       <a class="controlButton" href="/">Go to page</a>
       <button class="controlButton" on:click={logout}>Logout</button>
     </div>
@@ -95,19 +112,29 @@
 
   <div class="flex-row">
     <div class="menu" bind:clientHeight={menuHeight}>
-      <div on:click={() => open("themes")}>Themes</div>
-      <div on:click={() => open("blocks")}>Blocks</div>
-      <div on:click={() => open("menu")}>Menu</div>
-      <div on:click={() => open("slider")}>Slider</div>
-      <div on:click={() => open("news")}>News</div>
-      <div on:click={() => open("footer")}>Footer</div>
-      <div on:click={() => open("userList")}>
         {#if permissionLevel == 2}
-          User List
-        {:else}
-          Account settings
+            <div on:click={() => open("themes")}>Themes</div>
+            <div on:click={() => open("blocks")}>Blocks</div>
+            <div on:click={() => open("menu")}>Menu</div>
+            <div on:click={() => open("slider")}>Slider</div>
         {/if}
-      </div>
+
+        {#if permissionLevel > 0}
+            <div on:click={() => open("news")}>News</div>
+        {/if}
+
+        {#if permissionLevel == 2}
+            <div on:click={() => open("content")}>Content</div>
+            <div on:click={() => open("footer")}>Footer</div>
+        {/if}         
+      
+        <div on:click={() => open("userList")}>
+            {#if permissionLevel == 2}
+            User List
+            {:else}
+            Account settings
+            {/if}
+        </div>
     </div>
 
     <div class="settings" style="height: {menuHeight}px;">

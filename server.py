@@ -1,8 +1,10 @@
 import flask
-from flask import Flask, send_from_directory, request
+from flask import Flask, send_from_directory, request, send_file, url_for
 import sqlite3
 import json
 import os
+
+from werkzeug.utils import redirect, secure_filename
 
 app = Flask(__name__)
 myConnection = sqlite3.connect('data.sqlite', check_same_thread=False)
@@ -95,7 +97,8 @@ myCursor.execute("""CREATE TABLE IF NOT EXISTS news (
     title TEXT,
     description TEXT,
     category TEXT,
-    images TEXT
+    images TEXT,
+    id INTEGER PRIMARY KEY AUTOINCREMENT
 )""")
 
 
@@ -141,6 +144,18 @@ myCursor.execute("""
     INSERT INTO sliderDuration (duration)
     SELECT "200"
     WHERE NOT EXISTS(SELECT 1 FROM sliderDuration);
+""")
+
+# content table
+myCursor.execute("""CREATE TABLE IF NOT EXISTS content (
+    title TEXT,
+    description TEXT,
+    image TEXT
+)""")
+myCursor.execute("""
+    INSERT INTO content (title, description, image)
+    SELECT "", "", ""
+    WHERE NOT EXISTS(SELECT 1 FROM content);
 """)
 
 
@@ -213,7 +228,6 @@ def login():
     if (row[0][0] == 1):
         return '1'
     return '0'
-
 
 @app.route("/getPermission", methods=['POST'])
 def getPermission():
@@ -384,7 +398,6 @@ def updateNews():
 @app.route("/deleteNews", methods=['POST'])
 def deleteNews():
     title = request.data.decode("utf-8")
-    myCursor = myConnection.cursor()
     myCursor.execute(
         f'DELETE FROM news WHERE LOWER(title)=LOWER("{title}");')
     myConnection.commit()
@@ -613,6 +626,61 @@ def changeSliderDuration():
     """)
     myConnection.commit()
     return {"type": "success"}
+
+@app.route("/getContent", methods=['POST'])
+def getContent():
+    myCursor = myConnection.cursor()
+    myCursor.execute(f'SELECT * FROM content')
+    content = json.dumps(myCursor.fetchall())
+    return content
+
+@app.route("/saveContent", methods=['POST'])
+def saveContent():
+    title = request.json['title']
+    description = request.json['description']
+    image = request.json['image']
+    myCursor = myConnection.cursor()
+    myCursor.execute(f"""
+        UPDATE content 
+        SET title="{title}", description="{description}", image="{image}"
+    """)
+    myConnection.commit()
+    return {"type": "success"}
+
+@app.route("/exportSettings")
+def exportSettings():
+    with open('./data.sql', 'w') as f:
+        for line in myConnection.iterdump():
+            f.write('%s\n' % line)
+        print(f)
+    return send_file('./data.sql', as_attachment=True)
+
+@app.route("/importSettings", methods=['POST'])
+def importSettings():
+    if 'file' not in request.files:
+        return redirect('/#/Settings')
+    file = request.files['file']
+    file.filename = 'data.sql'
+    print(file)
+    filename = secure_filename(file.filename)
+    file.save(os.path.join('./', filename))
+
+    myCursor.execute("DROP TABLE IF EXISTS themes")
+    myCursor.execute("DROP TABLE IF EXISTS blocks")
+    myCursor.execute("DROP TABLE IF EXISTS menu")
+    myCursor.execute("DROP TABLE IF EXISTS menuType")
+    myCursor.execute("DROP TABLE IF EXISTS slider")
+    myCursor.execute("DROP TABLE IF EXISTS sliderDuration")
+    myCursor.execute("DROP TABLE IF EXISTS news")
+    myCursor.execute("DROP TABLE IF EXISTS content")
+    myCursor.execute("DROP TABLE IF EXISTS footer")
+    myCursor.execute("DROP TABLE IF EXISTS userList")
+    myConnection.commit()
+
+    f = open('./data.sql', 'r')
+    sql = f.read()
+    myConnection.executescript(sql)
+    return redirect('/#/Settings')
 
 
 @app.route("/getData", methods=['POST'])
