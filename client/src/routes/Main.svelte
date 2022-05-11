@@ -54,6 +54,8 @@
               title={news.newsTitle}
               content={news.newsText}
               img={news.newsPhoto}
+              color={data.theme.mainColor}
+              index={news.newsIndex}
             />
           {/each}
         </div>
@@ -88,7 +90,7 @@
 <style>
   .newsContainer {
     width: 100%;
-    margin: 30px 0;
+    margin: 0 0 30px 0;
     height: auto;
     display: flex;
     justify-content: space-around;
@@ -103,6 +105,7 @@
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
+    margin-bottom: 30px;
   }
   .right div {
     width: 500px;
