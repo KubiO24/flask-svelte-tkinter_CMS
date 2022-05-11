@@ -21,7 +21,6 @@
 
         let content = await res.json()
         content = content[0]
-        console.log(content)
         title = content[0];
         description = content[1];
         base64Image = content[2];
