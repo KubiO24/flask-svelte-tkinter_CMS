@@ -4,6 +4,8 @@
     export let content;
     export let img;
     export let border;
+    export let color;
+    export let index;
 </script>
 
 <div class="newsContainer" style="border-color: {border};">
@@ -13,7 +15,10 @@
     <div class="newsContent">
         <h3>{title}</h3>
         <p>{content}</p>
-        <button class="bt" style="border-color: {border};color:{border};"
+        <button
+            class="bt"
+            style="border-color: {border};color:{color};"
+            onclick="window.location.href='/#/news/{index}'"
             >Visit Article</button
         >
     </div>

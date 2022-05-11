@@ -192,9 +192,11 @@ def newsTitleExist(title):
 def base():
     return send_from_directory('client/public', 'index.html')
 
+
 @app.route("/<path:path>")
 def home(path):
     return send_from_directory('client/public', path)
+
 
 @app.route("/register", methods=['POST'])
 def register():
@@ -523,12 +525,14 @@ def deleteFooter():
     myConnection.commit()
     return {"type": "success"}
 
+
 @app.route("/getSlider", methods=['POST'])
 def getSlider():
     myCursor = myConnection.cursor()
     myCursor.execute(f'SELECT * FROM slider')
     slider = json.dumps(myCursor.fetchall())
     return slider
+
 
 @app.route("/saveSlide", methods=['POST'])
 def saveSlide():
@@ -546,6 +550,7 @@ def saveSlide():
     lastId = myCursor.fetchall()
     return {"type": "success", 'message': lastId[0][0]}
 
+
 @app.route("/updateSlide", methods=['POST'])
 def updateSlide():
     slider = request.json
@@ -558,6 +563,7 @@ def updateSlide():
     myConnection.commit()
     return {"type": "success"}
 
+
 @app.route("/deleteSlide", methods=['POST'])
 def deleteSlide():
     id = request.data.decode("utf-8")
@@ -566,6 +572,7 @@ def deleteSlide():
         f'DELETE FROM slider WHERE id={id};')
     myConnection.commit()
     return {"type": "success"}
+
 
 @app.route("/previousOrder", methods=['POST'])
 def previousOrder():
@@ -588,6 +595,7 @@ def previousOrder():
     myConnection.commit()
     return {"type": "success"}
 
+
 @app.route("/nextOrder", methods=['POST'])
 def nextOrder():
     id = request.json["id"]
@@ -609,12 +617,14 @@ def nextOrder():
     myConnection.commit()
     return {"type": "success"}
 
+
 @app.route("/getSliderDuration", methods=['POST'])
 def getSliderDuration():
     myCursor = myConnection.cursor()
     myCursor.execute(f'SELECT * FROM sliderDuration')
     duration = myCursor.fetchall()
     return duration[0][0]
+
 
 @app.route("/changeSliderDuration", methods=['POST'])
 def changeSliderDuration():

@@ -2,8 +2,8 @@
     import Header from "../components/header.svelte";
     import Footer from "../components/footer.svelte";
     import Carousel from "svelte-carousel";
-    import { onMount } from "svelte";
-
+    export let params = {};
+    let newsIndex = parseInt(params.id);
     let carousel;
     let logged = false;
     let username = localStorage.getItem("userLoginned");
@@ -12,10 +12,6 @@
     let color;
     let news;
     let imagesBase64Array = [];
-    onMount(() => {
-        let qr_code = window.location.pathname; // dump leading '/'
-        console.log("qr_code: ", qr_code);
-    });
     async function getData() {
         let res = await fetch("./getData", {
             method: "POST",
@@ -30,14 +26,13 @@
         });
         console.log(news);
 
-        if (news[0].newsPhoto !== "") {
-            imagesBase64Array = news[0].newsPhoto.split(".");
+        if (news[newsIndex].newsPhoto !== "") {
+            imagesBase64Array = news[newsIndex].newsPhoto.split(".");
         }
         console.log(imagesBase64Array);
         return res;
     }
     let data = getData();
-    console.log(params);
 </script>
 
 {#await data}
@@ -48,25 +43,27 @@
         style="background-color: {bgColor};color:{color};"
     >
         <Header
-            navbarType={data.blocks[0].navbarType}
-            navbarItems={data.blocks[0].navbarItems}
+            navbarType={data.blocks[newsIndex].navbarType}
+            navbarItems={data.blocks[newsIndex].navbarItems}
             background={data.theme.secondBackground}
             color={data.theme.secondColor}
             color2={data.theme.mainColor}
             isLogged={logged}
         />
-        <div style="padding: 60px;" />
+        <div style="padding: 30px;" />
 
         <div class="container">
-            <h2>{news[0].newsTitle}</h2>
-            <h5>{news[0].newsCategory}</h5>
-            <article>{news[0].newsText}</article>
+            <h5>{news[newsIndex].newsCategory}</h5>
+            <h2>{news[newsIndex].newsTitle}</h2>
+            <article style="margin-bottom: 30px;">
+                {news[newsIndex].newsText}
+            </article>
             <Carousel
                 bind:this={carousel}
                 let:showPrevPage
                 let:showNextPage
                 autoplay={false}
-                duration={800}
+                duration={300}
             >
                 <div
                     slot="prev"
@@ -77,12 +74,6 @@
                 </div>
                 {#if imagesBase64Array.length > 0}
                     {#each imagesBase64Array as item, i}
-                        <!-- <div
-                    class="slider"
-                    style="background-image: url({item.sliderPhoto});"
-                >
-                    <p>{item.sliderText}</p>
-                </div> -->
                         <div class="slider">
                             <img
                                 class="img"
@@ -92,7 +83,9 @@
                         </div>
                     {/each}
                 {:else}
-                    <div>There are no pictures in gallery</div>{/if}
+                    <div class="noPictures">
+                        <p>There are no pictures in gallery</p>
+                    </div>{/if}
                 <div
                     slot="next"
                     on:click={showNextPage}
@@ -137,5 +130,26 @@
     }
     .custom-arrow-next {
         right: 0;
+    }
+    .noPictures {
+        width: 100%;
+        height: 500px;
+        background-color: rgb(35, 35, 35);
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .noPictures p {
+        text-align: center;
+    }
+    .container {
+        width: auto;
+        padding: 50px;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        font-size: 1.5em;
     }
 </style>
