@@ -66,16 +66,14 @@
           <div class="someSec">
             <div class="left">
               <div>
-                <h2>First featurette heading.</h2>
-                <h3>It will blow your mind</h3>
+                <h2>{item.content.contentTitle}</h2>
               </div>
               <div>
-                Some great placeholder content for the first featurette here.
-                Imagine some exciting prose here.
+                {item.content.contentDesc}
               </div>
             </div>
             <div class="right">
-              <div>500 x 500</div>
+              <img src={item.content.contentPhoto} alt="" />
             </div>
           </div>
         </div>
@@ -107,7 +105,7 @@
     align-items: center;
     margin-bottom: 30px;
   }
-  .right div {
+  .right img {
     width: 500px;
     height: 500px;
     display: flex;

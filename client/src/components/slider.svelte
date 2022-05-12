@@ -3,7 +3,6 @@
 
     let carousel; // for calling methods of the carousel instance
     export let data;
-    console.log(data.sliderItems);
 
     const delay = data.sliderDuration;
 </script>

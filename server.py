@@ -765,6 +765,15 @@ def getData():
                 "sliderText": i[0]
             }
         )
+    myCursor.execute(f'SELECT * FROM content')
+    objContent = myCursor.fetchall()
+    print(objContent[0][0], flush=True)
+    content = {
+        "contentTitle": objContent[0][0],
+        "contentDesc": objContent[0][1],
+        "contentPhoto": objContent[0][2]
+    }
+
     resBlocks = [nav]
 
     for i in blocks:
@@ -785,6 +794,7 @@ def getData():
         elif i[0] == 'content':
             resBlocks.append({
                 "type": "content",
+                "content": content
             })
     footerItems = []
     myCursor.execute(f'SELECT * FROM footer')
