@@ -37,7 +37,7 @@
   }
 
   const filter = (e) => {
-    console.log(e.target.value);
+    currentCategory = e.target.value;
   };
 
   let data = getData();
@@ -75,17 +75,33 @@
           {/each}
         </select>
         <div class="newsContainer">
-          {#each item.newsItems as news}
-            <NewsContainer
-              category={news.newsCategory}
-              border={data.theme.newsBorder}
-              title={news.newsTitle}
-              content={news.newsText}
-              img={news.newsPhoto}
-              color={data.theme.mainColor}
-              index={news.newsIndex}
-            />
-          {/each}
+          {#if currentCategory === "all"}
+            {#each item.newsItems as news}
+              <NewsContainer
+                category={news.newsCategory}
+                border={data.theme.newsBorder}
+                title={news.newsTitle}
+                content={news.newsText}
+                img={news.newsPhoto}
+                color={data.theme.mainColor}
+                index={news.newsIndex}
+              />
+            {/each}
+          {:else}
+            {#each item.newsItems as news}
+              {#if currentCategory === news.newsCategory}
+                <NewsContainer
+                  category={news.newsCategory}
+                  border={data.theme.newsBorder}
+                  title={news.newsTitle}
+                  content={news.newsText}
+                  img={news.newsPhoto}
+                  color={data.theme.mainColor}
+                  index={news.newsIndex}
+                />
+              {/if}
+            {/each}
+          {/if}
         </div>
       {/if}
 

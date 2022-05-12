@@ -43,8 +43,8 @@
         style="background-color: {bgColor};color:{color};"
     >
         <Header
-            navbarType={data.blocks[newsIndex].navbarType}
-            navbarItems={data.blocks[newsIndex].navbarItems}
+            navbarType={data.blocks[0].navbarType}
+            navbarItems={data.blocks[0].navbarItems}
             background={data.theme.secondBackground}
             color={data.theme.secondColor}
             color2={data.theme.mainColor}
