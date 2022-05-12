@@ -8,6 +8,10 @@
   if ((username === null || username === "null") === false) logged = true;
   let bgColor;
   let color;
+  let font;
+  let categories = [];
+  let newsIndex;
+  let currentCategory = "all";
   async function getData() {
     let res = await fetch("./getData", {
       method: "POST",
@@ -15,9 +19,27 @@
     res = await res.json();
     bgColor = res.theme.mainBackground;
     color = res.theme.mainColor;
-    console.log(res);
+    font = res.theme.font;
+    let newsExists = false;
+    res.blocks.forEach((el, i) => {
+      if (el.type === "news") {
+        newsExists = true;
+        newsIndex = i;
+      }
+    });
+    if (newsExists) {
+      categories = res.blocks[newsIndex].newsItems.map((el) => {
+        return el.newsCategory;
+      });
+    }
+    console.log(categories);
     return res;
   }
+
+  const filter = (e) => {
+    console.log(e.target.value);
+  };
+
   let data = getData();
 </script>
 
@@ -26,7 +48,7 @@
 {:then data}
   <div
     class="main-page-container"
-    style="background-color: {bgColor};color:{color};"
+    style="background-color: {bgColor};color:{color}; font-family:{font}"
   >
     {#each data.blocks as item}
       {#if item.type === "navbar"}
@@ -46,8 +68,14 @@
       {/if}
 
       {#if item.type === "news"}
+        <select name="" id="filter" on:change={filter}>
+          <option value="all">All</option>
+          {#each categories as category}
+            <option value={category}>{category}</option>
+          {/each}
+        </select>
         <div class="newsContainer">
-          {#each item.newsItems as news, i}
+          {#each item.newsItems as news}
             <NewsContainer
               category={news.newsCategory}
               border={data.theme.newsBorder}

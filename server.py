@@ -765,9 +765,10 @@ def getData():
                 "sliderText": i[0]
             }
         )
+    myCursor.execute(f'SELECT * FROM sliderDuration')
+    duration = myCursor.fetchall()
     myCursor.execute(f'SELECT * FROM content')
     objContent = myCursor.fetchall()
-    print(objContent[0][0], flush=True)
     content = {
         "contentTitle": objContent[0][0],
         "contentDesc": objContent[0][1],
@@ -781,7 +782,7 @@ def getData():
             resBlocks.append(
                 {
                     "type": "slider",
-                    "sliderDuration": 5000,
+                    "sliderDuration": duration,
                     "sliderColor": "white",
                     "sliderItems": slider
                 },
