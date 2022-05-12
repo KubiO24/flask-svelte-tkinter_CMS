@@ -762,9 +762,20 @@ def getData():
         slider.append(
             {
                 "sliderPhoto": i[1],
-                "sliderText": i[0]
+                "sliderText": i[0],
+                "index": int(i[2])
             }
         )
+    hV = {}
+    isSorted = False
+    while isSorted == False:
+        isSorted = True
+        for i in range(0, len(slider) - 1):
+            if slider[i]["index"] > slider[i+1]["index"]:
+                hV = slider[i]
+                slider[i] = slider[i+1]
+                slider[i+1] = hV
+                isSorted = False
     myCursor.execute(f'SELECT * FROM sliderDuration')
     duration = myCursor.fetchall()
     myCursor.execute(f'SELECT * FROM content')

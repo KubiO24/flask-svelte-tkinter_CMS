@@ -31,9 +31,6 @@
                 >
                     <p>{item.sliderText}</p>
                 </div>
-                <!-- <div class="slider">
-                    <p>{item.sliderText}</p>
-                </div> -->
             {/each}
             <div
                 slot="next"
