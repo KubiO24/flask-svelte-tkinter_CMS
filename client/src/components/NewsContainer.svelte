@@ -2,7 +2,6 @@
     export let category;
     export let title;
     export let content;
-    export let img;
     export let border;
     export let color;
     export let index;
@@ -19,8 +18,9 @@
             class="bt"
             style="border-color: {border};color:{color};"
             onclick="window.location.href='/#/news/{index}'"
-            >Visit Article</button
         >
+            Visit Article
+        </button>
     </div>
 </div>
 

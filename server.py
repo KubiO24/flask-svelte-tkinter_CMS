@@ -231,6 +231,7 @@ def login():
         return '1'
     return '0'
 
+
 @app.route("/getPermission", methods=['POST'])
 def getPermission():
     username = request.data.decode("utf-8")
@@ -637,12 +638,14 @@ def changeSliderDuration():
     myConnection.commit()
     return {"type": "success"}
 
+
 @app.route("/getContent", methods=['POST'])
 def getContent():
     myCursor = myConnection.cursor()
     myCursor.execute(f'SELECT * FROM content')
     content = json.dumps(myCursor.fetchall())
     return content
+
 
 @app.route("/saveContent", methods=['POST'])
 def saveContent():
@@ -657,6 +660,7 @@ def saveContent():
     myConnection.commit()
     return {"type": "success"}
 
+
 @app.route("/exportSettings")
 def exportSettings():
     with open('./data.sql', 'w') as f:
@@ -664,6 +668,7 @@ def exportSettings():
             f.write('%s\n' % line)
         print(f)
     return send_file('./data.sql', as_attachment=True)
+
 
 @app.route("/importSettings", methods=['POST'])
 def importSettings():
@@ -703,6 +708,7 @@ def getData():
     theme = []
     blocks = []
     news = []
+    slider = []
     myCursor.execute(f'SELECT * FROM blocks')
     bblocks = myCursor.fetchall()
     for i in bblocks:
@@ -749,6 +755,16 @@ def getData():
                 "newsIndex": idx
             }
         )
+
+    myCursor.execute(f'SELECT * FROM slider')
+    tabSlider = myCursor.fetchall()
+    for i in tabSlider:
+        slider.append(
+            {
+                "sliderPhoto": i[1],
+                "sliderText": i[0]
+            }
+        )
     resBlocks = [nav]
 
     for i in blocks:
@@ -758,28 +774,7 @@ def getData():
                     "type": "slider",
                     "sliderDuration": 5000,
                     "sliderColor": "white",
-                    "sliderItems": [
-                        {
-                            "sliderPhoto": "../static/xyz1.jpg",
-                            "sliderText": "Teskt1 na sliderze"
-                        },
-                        {
-                            "sliderPhoto": "../static/xyz2.jpg",
-                            "sliderText": "Teskt2 na sliderze"
-                        },
-                        {
-                            "sliderPhoto": "../static/xyz2.jpg",
-                            "sliderText": "Teskt3 na sliderze"
-                        },
-                        {
-                            "sliderPhoto": "../static/xyz2.jpg",
-                            "sliderText": "Teskt4 na sliderze"
-                        },
-                        {
-                            "sliderPhoto": "../static/xyz2.jpg",
-                            "sliderText": "Teskt5 na sliderze"
-                        }
-                    ]
+                    "sliderItems": slider
                 },
             )
         elif i[0] == 'news':

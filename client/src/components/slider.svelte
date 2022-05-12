@@ -3,6 +3,7 @@
 
     let carousel; // for calling methods of the carousel instance
     export let data;
+    console.log(data.sliderItems);
 
     const delay = data.sliderDuration;
 </script>
@@ -25,15 +26,15 @@
                 <i class="fa fa-angle-left" style="font-size:60px" />
             </div>
             {#each data.sliderItems as item}
-                <!-- <div
+                <div
                     class="slider"
                     style="background-image: url({item.sliderPhoto});"
                 >
                     <p>{item.sliderText}</p>
-                </div> -->
-                <div class="slider">
-                    <p>{item.sliderText}</p>
                 </div>
+                <!-- <div class="slider">
+                    <p>{item.sliderText}</p>
+                </div> -->
             {/each}
             <div
                 slot="next"
@@ -56,6 +57,7 @@
         -ms-user-select: none; /* Internet Explorer/Edge */
         user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Edge, Opera and Firefox */
+        margin-bottom: 30px;
     }
     .slider {
         width: 100%;
@@ -65,6 +67,9 @@
         justify-content: center;
         align-items: center;
         transition: all ease 1s;
+        background-color: rgba(0, 0, 0, 0.749);
+        background-size: cover;
+        background-position: center;
     }
     .slider p {
         font-size: 100px;
