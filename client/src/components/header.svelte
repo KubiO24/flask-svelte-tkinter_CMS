@@ -39,13 +39,30 @@
 
         {#if isLogged}
             <div class="links nav-container">
-                <a href="/#/Settings" class="linkLogin">Settings</a>
-                <a href="/#/" on:click={logout} class="linkRegister">Log Out</a>
+                <a
+                    href="/#/Settings"
+                    class="linkLogin"
+                    style="color: {color}; border-color:{color};">Settings</a
+                >
+                <a
+                    href="/#/"
+                    on:click={logout}
+                    class="linkRegister"
+                    style="color: {color}; border-color:{color};">Log Out</a
+                >
             </div>
         {:else}
             <div class="links nav-container">
-                <a href="/#/Login" class="linkLogin">Login</a>
-                <a href="/#/Register" class="linkRegister">Register</a>
+                <a
+                    href="/#/Login"
+                    class="linkLogin"
+                    style="color: {color}; border-color:{color};">Login</a
+                >
+                <a
+                    href="/#/Register"
+                    class="linkRegister"
+                    style="color: {color}; border-color:{color};">Register</a
+                >
             </div>
         {/if}
     {:else}
@@ -85,15 +102,32 @@
             {/each}
             {#if isLogged}
                 <div class="side-links">
-                    <a href="/#/Settings" class="linkLogin">Settings</a>
-                    <a href="/#/" on:click={logout} class="linkRegister"
-                        >Log Out</a
+                    <a
+                        href="/#/Settings"
+                        class="linkLogin"
+                        style="color: {color}; border-color:{color};"
+                        >Settings</a
+                    >
+                    <a
+                        href="/#/"
+                        on:click={logout}
+                        class="linkRegister"
+                        style="color: {color}; border-color:{color};">Log Out</a
                     >
                 </div>
             {:else}
                 <div class="side-links">
-                    <a href="/#/Login" class="linkLogin">Login</a>
-                    <a href="/#/Register" class="linkRegister">Register</a>
+                    <a
+                        href="/#/Login"
+                        class="linkLogin"
+                        style="color: {color}; border-color:{color};">Login</a
+                    >
+                    <a
+                        href="/#/Register"
+                        class="linkRegister"
+                        style="color: {color}; border-color:{color};"
+                        >Register</a
+                    >
                 </div>
             {/if}
         </nav>
