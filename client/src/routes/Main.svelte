@@ -3,6 +3,8 @@
   import NewsContainer from "../components/NewsContainer.svelte";
   import Footer from "../components/footer.svelte";
   import Slider from "../components/slider.svelte";
+  import Progress from "svelte-carousel/src/components/Progress/Progress.svelte";
+  import Arrow from "svelte-carousel/src/components/Arrow/Arrow.svelte";
   let logged = false;
   let username = localStorage.getItem("userLoginned");
   if ((username === null || username === "null") === false) logged = true;
@@ -12,6 +14,7 @@
   let categories = [];
   let newsIndex;
   let currentCategory = "all";
+  let newsToPrint = [];
   async function getData() {
     let res = await fetch("./getData", {
       method: "POST",
@@ -32,6 +35,7 @@
         return el.newsCategory;
       });
     }
+    newsToPrint = res.blocks[newsIndex].newsItems;
     console.log(categories);
     return res;
   }
@@ -39,13 +43,39 @@
   const filter = (e) => {
     currentCategory = e.target.value;
   };
-
   let data = getData();
+  const sortNews = (e) => {
+    if (e.target.value === "a-z") newsToPrint.sort(sortAZ);
+    else if (e.target.value === "z-a") newsToPrint.sort(sortZA);
+    let h = [...newsToPrint];
+    newsToPrint = [...h];
+    console.log(newsToPrint[0].newsTitle, newsToPrint[1].newsTitle);
+  };
+  function sortAZ(a, b) {
+    if (a.newsTitle.toLowerCase() < b.newsTitle.toLowerCase()) {
+      return -1;
+    }
+    if (a.newsTitle.toLowerCase() > b.newsTitle.toLowerCase()) {
+      return 1;
+    }
+    return 0;
+  }
+  function sortZA(a, b) {
+    if (a.newsTitle.toLowerCase() < b.newsTitle.toLowerCase()) {
+      return 1;
+    }
+    if (a.newsTitle.toLowerCase() > b.newsTitle.toLowerCase()) {
+      return -1;
+    }
+    return 0;
+  }
 </script>
 
 {#await data}
   Loading...
 {:then data}
+  <script>
+  </script>
   <div
     class="main-page-container"
     style="background-color: {bgColor};color:{color}; font-family:{font}"
@@ -68,34 +98,44 @@
       {/if}
 
       {#if item.type === "news"}
-        <select name="" id="filter" on:change={filter}>
-          <option value="all">All</option>
-          {#each categories as category}
-            <option value={category}>{category}</option>
-          {/each}
-        </select>
+        <div class="additional-to-news">
+          <div>
+            <select name="" id="filter" on:change={filter}>
+              <option value="all">All</option>
+              {#each categories as category}
+                <option value={category}>{category}</option>
+              {/each}
+            </select>
+            <div>Filter</div>
+          </div>
+          <div>
+            <select name="" id="filter" on:change={sortNews}>
+              <option value="a-z">A-Z</option>
+              <option value="z-a">Z-A</option>
+            </select>
+            <div>Filter</div>
+          </div>
+        </div>
         <div class="newsContainer">
           {#if currentCategory === "all"}
-            {#each item.newsItems as news}
+            {#each newsToPrint as news}
               <NewsContainer
                 category={news.newsCategory}
                 border={data.theme.newsBorder}
                 title={news.newsTitle}
                 content={news.newsText}
-                img={news.newsPhoto}
                 color={data.theme.mainColor}
                 index={news.newsIndex}
               />
             {/each}
           {:else}
-            {#each item.newsItems as news}
+            {#each newsToPrint as news}
               {#if currentCategory === news.newsCategory}
                 <NewsContainer
                   category={news.newsCategory}
                   border={data.theme.newsBorder}
                   title={news.newsTitle}
                   content={news.newsText}
-                  img={news.newsPhoto}
                   color={data.theme.mainColor}
                   index={news.newsIndex}
                 />
@@ -130,6 +170,18 @@
 {/await}
 
 <style>
+  .additional-to-news {
+    display: flex;
+    justify-content: space-evenly;
+    gap: 20px;
+    align-items: center;
+  }
+  .additional-to-news div {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    align-items: center;
+  }
   .newsContainer {
     width: 100%;
     margin: 0 0 30px 0;
