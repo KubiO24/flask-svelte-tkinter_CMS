@@ -49,7 +49,6 @@
     else if (e.target.value === "z-a") newsToPrint.sort(sortZA);
     let h = [...newsToPrint];
     newsToPrint = [...h];
-    console.log(newsToPrint[0].newsTitle, newsToPrint[1].newsTitle);
   };
   function sortAZ(a, b) {
     if (a.newsTitle.toLowerCase() < b.newsTitle.toLowerCase()) {
