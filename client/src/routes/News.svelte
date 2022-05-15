@@ -12,16 +12,8 @@
     let color;
     let news;
     let imagesBase64Array = [];
-    let comments = [
-        {
-            author: "Kuba",
-            content: "słaby artykuł",
-        },
-        {
-            author: "Igor",
-            content: "dobry artykuł",
-        },
-    ];
+    let authors = [];
+    let comments = [];
     let newComment = "";
     async function getData() {
         let res = await fetch("./getData", {
@@ -46,6 +38,18 @@
         });
         coms = await coms.json();
 
+        authors = coms.authors.split(",,,");
+        comments = coms.comments.split(",,,");
+        if (
+            (authors[0] === " " && comments[0] === " ") ||
+            (authors[0] === "" && comments[0] === "")
+        ) {
+            authors.shift();
+            comments.shift();
+        }
+
+        console.log(authors, comments);
+
         if (news[newsIndex].newsPhoto !== "") {
             imagesBase64Array = news[newsIndex].newsPhoto.split(".");
         }
@@ -53,8 +57,23 @@
     }
     let data = getData();
 
-    function addComment() {
+    async function addComment() {
         console.log(newComment);
+        await fetch("./setComments", {
+            method: "POST",
+            body: JSON.stringify({
+                author: localStorage.getItem("userLoginned"),
+                content: newComment,
+                index: news[newsIndex].newsID,
+            }),
+            headers: {
+                "content-type": "application/json",
+            },
+        });
+        authors = [...authors, localStorage.getItem("userLoginned")];
+        comments = [...comments, newComment];
+
+        console.log(authors, comments);
         newComment = "";
     }
 </script>
@@ -133,14 +152,14 @@
                 </div>
             {/if}
             <div class="comments-list">
-                {#each comments as comment}
+                {#each authors as author, i}
                     <div
                         class="comment"
                         style="background-color:{data.theme
                             .secondBackground}; color:{data.theme.secondColor};"
                     >
-                        <h4 class="author">{comment.author}</h4>
-                        <div class="comment-content">{comment.content}</div>
+                        <h4 class="author">{author}</h4>
+                        <div class="comment-content">{comments[i]}</div>
                     </div>
                 {/each}
             </div>

@@ -165,7 +165,7 @@ myCursor.execute("""
 myCursor.execute("""CREATE TABLE IF NOT EXISTS comments (
     author TEXT,
     content TEXT,
-    newsIndex INTEGER
+    newsIndex INT
 )""")
 
 myConnection.commit()
@@ -413,6 +413,7 @@ def deleteNews():
     myCursor.execute(
         f'DELETE FROM news WHERE LOWER(title)=LOWER("{title}");')
     myConnection.commit()
+
     return {"type": "success"}
 
 
@@ -854,7 +855,6 @@ def getData():
 def getComments():
     index = request.json['index']
     comments = {"authors": "", "comments": ""}
-    print(index, flush=True)
 
     myCursor.execute(f'SELECT * FROM comments WHERE newsIndex={index}')
     commentsData = myCursor.fetchall()
@@ -864,9 +864,37 @@ def getComments():
             INSERT INTO comments (author, content, newsIndex)
             VALUES ('','',{index})
         """)
-        print(commentsData, "tak", flush=True)
+        myConnection.commit()
+        print("setTable", flush=True)
+    if len(commentsData) == 1:
+        comments["authors"] = commentsData[0][0]
+        comments["comments"] = commentsData[0][1]
 
+    print(comments, flush=True)
     return comments
+
+
+@app.route("/setComments", methods=['POST'])
+def setComments():
+    author = request.json['author']
+    content = request.json['content']
+    index = request.json['index']
+    print(author, content, flush=True)
+
+    myCursor.execute(f'SELECT * FROM comments WHERE newsIndex={index}')
+    commentsData = myCursor.fetchall()
+
+    finalAuthor = f'{commentsData[0][0]},,,{author}'
+    finalContent = f'{commentsData[0][1]},,,{content}'
+
+    myCursor.execute(f"""
+        UPDATE comments 
+        SET author="{finalAuthor}", content="{finalContent}"
+        WHERE newsIndex={index};
+    """)
+    myConnection.commit()
+
+    return 'success'
 
 
 if __name__ == "__main__":
