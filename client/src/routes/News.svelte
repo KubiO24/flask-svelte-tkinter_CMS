@@ -12,6 +12,17 @@
     let color;
     let news;
     let imagesBase64Array = [];
+    let comments = [
+        {
+            author: "Kuba",
+            content: "słaby artykuł",
+        },
+        {
+            author: "Igor",
+            content: "dobry artykuł",
+        },
+    ];
+    let newComment = "";
     async function getData() {
         let res = await fetch("./getData", {
             method: "POST",
@@ -24,15 +35,28 @@
                 news = el.newsItems;
             }
         });
-        console.log(news);
+        let coms = await fetch("./getComments", {
+            method: "POST",
+            body: JSON.stringify({
+                index: news[newsIndex].newsID,
+            }),
+            headers: {
+                "content-type": "application/json",
+            },
+        });
+        coms = await coms.json();
 
         if (news[newsIndex].newsPhoto !== "") {
             imagesBase64Array = news[newsIndex].newsPhoto.split(".");
         }
-        console.log(imagesBase64Array);
         return res;
     }
     let data = getData();
+
+    function addComment() {
+        console.log(newComment);
+        newComment = "";
+    }
 </script>
 
 {#await data}
@@ -96,6 +120,32 @@
             </Carousel>
         </div>
 
+        <div class="comments">
+            <h3>Komentarze</h3>
+            {#if logged}
+                <div class="add-comments">
+                    <input
+                        type="text"
+                        bind:value={newComment}
+                        placeholder="Your comment..."
+                    />
+                    <button on:click={addComment}>Post</button>
+                </div>
+            {/if}
+            <div class="comments-list">
+                {#each comments as comment}
+                    <div
+                        class="comment"
+                        style="background-color:{data.theme
+                            .secondBackground}; color:{data.theme.secondColor};"
+                    >
+                        <h4 class="author">{comment.author}</h4>
+                        <div class="comment-content">{comment.content}</div>
+                    </div>
+                {/each}
+            </div>
+        </div>
+
         <Footer
             footerItems={data.blocks[data.blocks.length - 1].footerItems}
             copyrights={data.blocks[data.blocks.length - 1].footerText}
@@ -104,6 +154,28 @@
 {/await}
 
 <style>
+    .comments {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .comments-list {
+        min-width: 250px;
+        width: 60%;
+    }
+    .comment {
+        padding: 10px 20px;
+        margin: 5px;
+        border-radius: 20px;
+    }
+    .comment h4 {
+        font-size: 1.2em;
+    }
+    .author {
+        margin: 2px;
+    }
     .slider {
         width: 100%;
         height: 500px;

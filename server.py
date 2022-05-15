@@ -98,6 +98,8 @@ myCursor.execute("""CREATE TABLE IF NOT EXISTS news (
     description TEXT,
     category TEXT,
     images TEXT,
+    authors TEXT,
+    comments TEXT,
     id INTEGER PRIMARY KEY AUTOINCREMENT
 )""")
 
@@ -158,6 +160,13 @@ myCursor.execute("""
     WHERE NOT EXISTS(SELECT 1 FROM content);
 """)
 
+# comments table
+
+myCursor.execute("""CREATE TABLE IF NOT EXISTS comments (
+    author TEXT,
+    content TEXT,
+    newsIndex INTEGER
+)""")
 
 myConnection.commit()
 
@@ -752,7 +761,8 @@ def getData():
                 "newsTitle": i[0],
                 "newsText": i[1],
                 "newsPhoto": i[3],
-                "newsIndex": idx
+                "newsIndex": idx,
+                "newsID": i[4]
             }
         )
 
@@ -838,6 +848,25 @@ def getData():
         "blocks": resBlocks
     }
     return finalJSON
+
+
+@app.route("/getComments", methods=['POST'])
+def getComments():
+    index = request.json['index']
+    comments = {"authors": "", "comments": ""}
+    print(index, flush=True)
+
+    myCursor.execute(f'SELECT * FROM comments WHERE newsIndex={index}')
+    commentsData = myCursor.fetchall()
+
+    if len(commentsData) < 1:
+        myCursor.execute(f"""
+            INSERT INTO comments (author, content, newsIndex)
+            VALUES ('','',{index})
+        """)
+        print(commentsData, "tak", flush=True)
+
+    return comments
 
 
 if __name__ == "__main__":
