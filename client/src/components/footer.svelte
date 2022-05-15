@@ -28,6 +28,8 @@
     .links {
         height: 100px;
         display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
         justify-content: center;
         align-items: center;
     }
