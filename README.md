@@ -1,26 +1,17 @@
-Trello: https://trello.com/b/4Qum36NH/cms
+<h1>Uruchomienie</h1>
 
-</br>
+<ul>
+    <li>git clone https://github.com/KubiO24/flask-svelte-tkinter_CMS.git</li>
+    <li>cd flask-svelte-tkinter_CMS</li>
+    <li>py -3 -m venv .venv</li>
+    <li>.venv\scripts\activate</li>
+    <li>python -m pip install --upgrade pip</li>
+    <li>pip install -r requirements.txt</li>
+    <li>cd client</li>
+    <li>npm run build</li>
+    <li>cd ../</li>
+    <li>aby uruchomić serwer: python server.py</li>
+    <li>aby uruchomić aplikacje desktopową należy otworzyć drugą konsolę i wpisać: python tkinterCMS.py</li>
+</ul>
 
-Na początek: </br>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - sklonować repozytorium z gita </br>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - pobrać potrzebne moduły: "npm install" będąc w katalogu Svelte (client) </br>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - "npm run build" będąc w katalogu Svelte (client) </br>
-
-Praca z gitem: </br>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - "git remote add origin https://github.com/KubiO24/flask-svelte-tkinter_CMS.git" </br>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - spullować zmiany z gita (przed rozpoczęciem pracy pracy na branchu lub po spullowaniu, nigdy podczas, ponieważ usunie to postęp) </br>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - praca na branchach: https://www.educative.io/edpresso/git-branch-command </br>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - push: "git push -u origin master"<--(nazwa brancha)
-    
-</br>
-
-By zapisac zmiany zrobione na frontendzie (Svelte):</br>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - "cd client"</br>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - zrobić zmiany w plikach</br>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - "npm run build" lub "npm run build"
-
-</br>
-
-By odpalic serwer (Flask): </br>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - "python server.py"
+<h6>Projekt wykonany przez Jakuba Kowala i Igora Świeczyńskiego</h6>
