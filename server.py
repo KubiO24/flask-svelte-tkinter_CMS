@@ -700,6 +700,7 @@ def importSettings():
     myCursor.execute("DROP TABLE IF EXISTS content")
     myCursor.execute("DROP TABLE IF EXISTS footer")
     myCursor.execute("DROP TABLE IF EXISTS userList")
+    myCursor.execute("DROP TABLE IF EXISTS comments")
     myConnection.commit()
 
     f = open('./data.sql', 'r')
@@ -763,10 +764,9 @@ def getData():
                 "newsText": i[1],
                 "newsPhoto": i[3],
                 "newsIndex": idx,
-                "newsID": i[4]
+                "newsID": i[6]
             }
         )
-
     myCursor.execute(f'SELECT * FROM slider')
     tabSlider = myCursor.fetchall()
     for i in tabSlider:

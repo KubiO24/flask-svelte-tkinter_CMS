@@ -15,18 +15,20 @@
     let authors = [];
     let comments = [];
     let newComment = "";
-    async function getData() {
+    
+    async function getData() {  
         let res = await fetch("./getData", {
             method: "POST",
         });
         res = await res.json();
         bgColor = res.theme.mainBackground;
         color = res.theme.mainColor;
-        res.blocks.forEach((el) => {
+        res.blocks.forEach((el) => {     
             if (el.type === "news") {
                 news = el.newsItems;
             }
         });
+        console.log(news[newsIndex])
         let coms = await fetch("./getComments", {
             method: "POST",
             body: JSON.stringify({

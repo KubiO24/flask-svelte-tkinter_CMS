@@ -36,7 +36,6 @@
       });
     }
     newsToPrint = res.blocks[newsIndex].newsItems;
-    console.log(categories);
     categories = [...new Set(categories)];
     return res;
   }
