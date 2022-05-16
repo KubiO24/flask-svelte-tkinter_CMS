@@ -764,7 +764,7 @@ def getData():
                 "newsText": i[1],
                 "newsPhoto": i[3],
                 "newsIndex": idx,
-                "newsID": i[6]
+                "newsID": i[4]
             }
         )
     myCursor.execute(f'SELECT * FROM slider')
