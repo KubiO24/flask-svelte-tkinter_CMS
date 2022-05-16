@@ -98,6 +98,8 @@ myCursor.execute("""CREATE TABLE IF NOT EXISTS news (
     description TEXT,
     category TEXT,
     images TEXT,
+    authors TEXT,
+    comments TEXT,
     id INTEGER PRIMARY KEY AUTOINCREMENT
 )""")
 
@@ -158,6 +160,13 @@ myCursor.execute("""
     WHERE NOT EXISTS(SELECT 1 FROM content);
 """)
 
+# comments table
+
+myCursor.execute("""CREATE TABLE IF NOT EXISTS comments (
+    author TEXT,
+    content TEXT,
+    newsIndex INT
+)""")
 
 myConnection.commit()
 
@@ -404,6 +413,7 @@ def deleteNews():
     myCursor.execute(
         f'DELETE FROM news WHERE LOWER(title)=LOWER("{title}");')
     myConnection.commit()
+
     return {"type": "success"}
 
 
@@ -752,7 +762,8 @@ def getData():
                 "newsTitle": i[0],
                 "newsText": i[1],
                 "newsPhoto": i[3],
-                "newsIndex": idx
+                "newsIndex": idx,
+                "newsID": i[4]
             }
         )
 
@@ -838,6 +849,52 @@ def getData():
         "blocks": resBlocks
     }
     return finalJSON
+
+
+@app.route("/getComments", methods=['POST'])
+def getComments():
+    index = request.json['index']
+    comments = {"authors": "", "comments": ""}
+
+    myCursor.execute(f'SELECT * FROM comments WHERE newsIndex={index}')
+    commentsData = myCursor.fetchall()
+
+    if len(commentsData) < 1:
+        myCursor.execute(f"""
+            INSERT INTO comments (author, content, newsIndex)
+            VALUES ('','',{index})
+        """)
+        myConnection.commit()
+        print("setTable", flush=True)
+    if len(commentsData) == 1:
+        comments["authors"] = commentsData[0][0]
+        comments["comments"] = commentsData[0][1]
+
+    print(comments, flush=True)
+    return comments
+
+
+@app.route("/setComments", methods=['POST'])
+def setComments():
+    author = request.json['author']
+    content = request.json['content']
+    index = request.json['index']
+    print(author, content, flush=True)
+
+    myCursor.execute(f'SELECT * FROM comments WHERE newsIndex={index}')
+    commentsData = myCursor.fetchall()
+
+    finalAuthor = f'{commentsData[0][0]},,,{author}'
+    finalContent = f'{commentsData[0][1]},,,{content}'
+
+    myCursor.execute(f"""
+        UPDATE comments 
+        SET author="{finalAuthor}", content="{finalContent}"
+        WHERE newsIndex={index};
+    """)
+    myConnection.commit()
+
+    return 'success'
 
 
 if __name__ == "__main__":

@@ -37,6 +37,7 @@
     }
     newsToPrint = res.blocks[newsIndex].newsItems;
     console.log(categories);
+    categories = [...new Set(categories)];
     return res;
   }
 
@@ -196,18 +197,20 @@
     min-width: 320px;
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     justify-content: space-around;
     align-items: center;
     margin-bottom: 30px;
   }
   .right img {
-    width: 500px;
-    height: 500px;
+    max-width: 500px;
+    max-height: 500px;
+    width: 100%;
+    height: 100%;
+    margin: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: grey;
-    font-size: 50px;
   }
   .some-sec-container {
     width: 100%;

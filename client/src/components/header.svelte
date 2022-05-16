@@ -178,6 +178,8 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        font-size: 1.4em;
+        font-weight: 500;
     }
     .linkLogin {
         padding: 5px 10px;
