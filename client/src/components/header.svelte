@@ -26,7 +26,9 @@
 
 <header style="background-color: {background};">
     {#if navbarType === "horizontal"}
-        <div class="nav-container" style="padding: 0 20px;">Icon</div>
+        <div class="nav-container" style="padding: 0 20px;">
+            <img src="icon.png" alt="" />
+        </div>
         <nav class="nav-container">
             <div class="nav-links nav-container" style="width: 100%;">
                 {#each navbarItems as item}
@@ -70,7 +72,7 @@
             class="nav-container"
             style="padding: 0 20px; justify-content:start;"
         >
-            Icon
+            <img src="icon.png" alt="" />
         </div>
         <div
             class="nav-container hamburger-menu"
