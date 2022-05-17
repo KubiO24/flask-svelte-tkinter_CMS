@@ -27,7 +27,7 @@
 <header style="background-color: {background};">
     {#if navbarType === "horizontal"}
         <div class="nav-container" style="padding: 0 20px;">
-            <img src="icon.png" alt="" />
+            <img class="icon" src="icon.png" alt="" />
         </div>
         <nav class="nav-container">
             <div class="nav-links nav-container" style="width: 100%;">
@@ -72,7 +72,7 @@
             class="nav-container"
             style="padding: 0 20px; justify-content:start;"
         >
-            <img src="icon.png" alt="" />
+            <img class="icon" src="icon.png" alt="" />
         </div>
         <div
             class="nav-container hamburger-menu"
@@ -159,6 +159,9 @@
         z-index: 100;
         height: 120px;
         width: 100%;
+    }
+    .icon {
+        width: 50px;
     }
     .nav-container {
         display: flex;
